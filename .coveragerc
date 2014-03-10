@@ -1,0 +1,7 @@
+[run]
+branch = True
+source = graffiti
+omit = graffiti/tests/*,graffiti/openstack/*
+
+[report]
+ignore-errors = True
