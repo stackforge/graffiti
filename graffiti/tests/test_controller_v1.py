@@ -13,21 +13,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from pecan import expose
-from webob.exc import status_map
+"""
+test_controller_v1
+----------------------------------
 
+Tests for `graffiti` module.
+"""
+
+from graffiti.tests import base
+
+from graffiti.controllers.root import RootController
 from graffiti.controllers.versions import V1Controller
 
 
-class RootController(object):
+class TestControllerV1(base.TestCase):
 
-    v1 = V1Controller()
+    def test_v1_exists(self):
+        root = RootController()
+        self.assertIn(hasattr(root, 'v1'), [True])
+        pass
 
-    @expose('error.html')
-    def error(self, status):
-        try:
-            status = int(status)
-        except ValueError:  # pragma: no cover
-            status = 500
-        message = getattr(status_map.get(status), 'explanation', '')
-        return dict(status=status, message=message)
+    def test_v1_resource_exists(self):
+        v1 = V1Controller()
+        self.assertIn(hasattr(v1, 'resource'), [True])
+        pass

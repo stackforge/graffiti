@@ -20,6 +20,8 @@ from wsmeext.pecan import wsexpose
 
 from graffiti.model.v1.resource import Resource
 
+import six
+
 resources = []
 
 
@@ -33,7 +35,7 @@ class ResourceController(RestController):
     def options():
         pass
 
-    @wsexpose(Resource, unicode)
+    @wsexpose(Resource, six.text_type)
     def get_one(self, id):
         global resources
 
