@@ -16,10 +16,10 @@
 import wsme
 from wsme import types
 
-from graffiti.model.v1.capability import Capability
-from graffiti.model.v1.property import Property
-from graffiti.model.v1.provider import Provider
-from graffiti.model.v1.requirement import Requirement
+from graffiti.api.model.v1.capability import Capability
+from graffiti.api.model.v1.property import Property
+from graffiti.api.model.v1.provider import Provider
+from graffiti.api.model.v1.requirement import Requirement
 
 
 class Resource(types.Base):

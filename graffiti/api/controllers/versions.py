@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from graffiti.controllers.v1.resource import ResourceController
+from graffiti.api.controllers.v1.resource import ResourceController
 
 
 class V1Controller(object):

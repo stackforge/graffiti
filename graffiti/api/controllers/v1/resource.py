@@ -18,7 +18,7 @@ from pecan.rest import RestController
 from wsme.api import Response
 from wsmeext.pecan import wsexpose
 
-from graffiti.model.v1.resource import Resource
+from graffiti.api.model.v1.resource import Resource
 
 import six
 

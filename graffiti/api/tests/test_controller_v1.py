@@ -20,10 +20,10 @@ test_controller_v1
 Tests for `graffiti` module.
 """
 
-from graffiti.tests import base
+from graffiti.api.tests import base
 
-from graffiti.controllers.root import RootController
-from graffiti.controllers.versions import V1Controller
+from graffiti.api.controllers.root import RootController
+from graffiti.api.controllers.versions import V1Controller
 
 
 class TestControllerV1(base.TestCase):

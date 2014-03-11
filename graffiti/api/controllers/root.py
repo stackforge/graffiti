@@ -16,7 +16,7 @@
 from pecan import expose
 from webob.exc import status_map
 
-from graffiti.controllers.versions import V1Controller
+from graffiti.api.controllers.versions import V1Controller
 
 
 class RootController(object):

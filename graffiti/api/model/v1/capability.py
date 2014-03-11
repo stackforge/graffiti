@@ -16,7 +16,7 @@
 import wsme
 from wsme import types
 
-from graffiti.model.v1.property import Property
+from graffiti.api.model.v1.property import Property
 
 
 class Capability(types.Base):

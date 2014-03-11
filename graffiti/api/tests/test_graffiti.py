@@ -20,7 +20,7 @@ test_graffiti
 Tests for `graffiti` module.
 """
 
-from graffiti.tests import base
+from graffiti.api.tests import base
 
 
 class TestGraffiti(base.TestCase):
