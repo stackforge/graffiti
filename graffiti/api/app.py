@@ -15,10 +15,10 @@
 
 from pecan import make_app
 
-from graffiti import model
-from graffiti.service import prepare_service
+from graffiti.api import model
+from graffiti.api.service import prepare_service
 
-from graffiti.hooks import CorsHook
+from graffiti.api.hooks import CorsHook
 
 from oslo.config import cfg
 CONF = cfg.CONF

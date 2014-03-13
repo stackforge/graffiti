@@ -21,8 +21,8 @@ server = {
 
 # Pecan Application Configurations
 app = {
-    'root': 'graffiti.controllers.root.RootController',
-    'modules': ['graffiti'],
+    'root': 'graffiti.api.controllers.root.RootController',
+    'modules': ['graffiti.api'],
     'static_root': '%(confdir)s/public',
     'template_path': '%(confdir)s/graffiti/templates',
     'debug': False,
