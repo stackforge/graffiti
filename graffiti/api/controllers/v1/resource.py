@@ -52,7 +52,7 @@ class ResourceController(RestController):
 
         return resources
 
-    @wsexpose(Resource, Resource)
+    @wsexpose(Resource, body=Resource)
     def post(self, resource):
         global resources
 
