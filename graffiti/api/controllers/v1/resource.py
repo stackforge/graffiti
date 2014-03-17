@@ -79,7 +79,7 @@ class ResourceController(RestController):
 
         return []
 
-    @wsexpose(Resource, six.text_type, Resource)
+    @wsexpose(Resource, six.text_type, body=Resource)
     def put(self, id, resource):
 
         self._controller.set_resource(id, resource_definition=resource)
@@ -89,6 +89,7 @@ class ResourceController(RestController):
     @wsexpose(Resource, body=Resource)
     def post(self, resource):
 
-        self._controller.set_resource(resource_definition=resource)
+        id = resource.id if hasattr(resource, 'id') else None
+        self._controller.set_resource(id, resource_definition=resource)
 
         return resource
