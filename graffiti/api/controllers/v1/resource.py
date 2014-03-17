@@ -86,7 +86,7 @@ class ResourceController(RestController):
 
         return resource
 
-    @wsexpose(Resource, Resource)
+    @wsexpose(Resource, body=Resource)
     def post(self, resource):
 
         self._controller.set_resource(resource_definition=resource)
