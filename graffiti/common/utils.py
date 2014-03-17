@@ -13,25 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-test_controller_v1
-----------------------------------
-
-Tests for `graffiti` module.
-"""
-
-from graffiti.api.tests import base
-
-from graffiti.api.controllers.root import RootController
-from graffiti.api.controllers.versions import V1Controller
+# look at heat/openstack/common/gettextutils.py when we actually need
+# to implement this method
 
 
-class TestControllerV1(base.TestCase):
-
-    def test_v1_exists(self):
-        root = RootController()
-        self.assertIn(hasattr(root, 'v1'), [True])
-
-    def test_v1_resource_exists(self):
-        v1 = V1Controller()
-        self.assertIn(hasattr(v1, 'resource'), [True])
+# TODO(travis): need localization strategy
+def _(msg):
+    return msg

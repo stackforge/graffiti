@@ -20,9 +20,24 @@ from wsmeext.pecan import wsexpose
 
 from graffiti.api.model.v1.resource import Resource
 
+from graffiti.api.model.v1.resource_controller import LocalResourceController
+
+from graffiti.common.utils import _
+
+from oslo.config import cfg
+
 import six
 
-resources = []
+
+resource_controller_group = cfg.OptGroup('resource_controller')
+resource_controller_opts = [
+    cfg.StrOpt('type',
+               help=_("The resource controller plugin"))
+]
+
+cfg.CONF.register_group(resource_controller_group)
+cfg.CONF.register_opts(resource_controller_opts,
+                       group=resource_controller_group)
 
 
 class ResourceController(RestController):
@@ -31,29 +46,49 @@ class ResourceController(RestController):
 
         self.status = 200
 
+        self._controller = self._load_controller('Local')
+
+    def _load_controller(self, which_one):
+        controller_type = cfg.CONF.resource_controller.type
+        controller_type = controller_type if controller_type else 'Local'
+
+        # TODO(lakshmi): Load the controller here
+        _controller = LocalResourceController()
+
+        return _controller
+
     @wsexpose()
     def options():
         pass
 
     @wsexpose(Resource, six.text_type)
     def get_one(self, id):
-        global resources
-
-        for res in resources:
-            if res.id.lower() == id.lower():
-                return res
+        res = self._controller.get_resource(id)
+        if res:
+            return res
 
         res = Response(Resource(), status_code=404, error="Resource Not Found")
         return res
 
-    @wsexpose([Resource])
-    def get_all(self):
-        global resources
+    @wsexpose([Resource], six.text_type)
+    def get_all(self, query_string=None):
 
-        return resources
+        res_list = self._controller.find_resources(query_string)
+        if res_list:
+            return res_list
+
+        return []
+
+    @wsexpose(Resource, six.text_type, Resource)
+    def put(self, id, resource):
+
+        self._controller.set_resource(id, resource_definition=resource)
+
+        return resource
 
     @wsexpose(Resource, Resource)
     def post(self, resource):
-        global resources
 
-        resources.append(resource)
+        self._controller.set_resource(resource_definition=resource)
+
+        return resource

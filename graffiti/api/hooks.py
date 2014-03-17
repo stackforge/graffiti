@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import json
+#import json
 
 from pecan.hooks import PecanHook
 
@@ -30,7 +30,8 @@ class CorsHook(PecanHook):
             state.response.headers['Content-Length'] = \
                 str(len(state.response.body))
 
-        if state.response.headers['Content-Type'].find('json') != -1:
+        # TODO(lakshmi): this fails in Python 3.3, don't know why
+#        if state.response.headers['Content-Type'].find('json') != -1:
             # Sort the Response Body's JSON
-            json_str = json.loads(state.response.body)
-            state.response.body = json.dumps(json_str, sort_keys=True)
+#            json_str = json.loads(state.response.body)
+#            state.response.body = json.dumps(json_str, sort_keys=True)

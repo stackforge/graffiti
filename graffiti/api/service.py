@@ -22,4 +22,10 @@ def prepare_service(argv=None):
     if argv is None:
         argv = sys.argv
 
-    cfg.CONF(argv[3:], project='graffiti')
+    # when running unit tests, argv is inaccessible for some unknown
+    # reason; need to revisit this logic again running under Apache2
+    # TODO(lakshmi): figure this out
+    try:
+        cfg.CONF(argv[3:], project='graffiti')
+    except BaseException:
+        pass
