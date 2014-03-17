@@ -19,78 +19,59 @@ test_graffiti
 
 Tests for `graffiti` module.
 """
-import os
-
-import pecan
-import pecan.testing
-
-from oslo.config import cfg
-
-from graffiti.api.tests import base
+from graffiti.api.tests import pecan_base
 
 
-class TestGraffiti(base.TestCase):
-
-    PATH_PREFIX = '/v1'
-
-    def setUp(self):
-        super(TestGraffiti, self).setUp()
-        self.app = self._make_app()
-        cfg.CONF.set_override(name='type', override='Local',
-                              group='resource_controller')
-
-    def _make_app(self):
-        root_dir = self.path_get()
-        self.config = {
-            'app': {
-                'root': 'graffiti.api.controllers.root.RootController',
-                'modules': ['graffiti.api'],
-                'template_path': '%s/graffiti/templates' % root_dir,
-            },
-        }
-
-        return pecan.testing.load_test_app(self.config)
-
-    def tearDown(self):
-        super(TestGraffiti, self).tearDown()
-        pecan.set_config({}, overwrite=True)
-
-    def path_get(self, project_file=None):
-        root = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                            '..',
-                                            '..', ))
-        if project_file:
-            return os.path.join(root, project_file)
-        else:
-            return root
-
-    def get_json(self, path, expect_errors=False, headers=None,
-                 extra_environ=None, q=[], **params):
-        full_path = self.PATH_PREFIX + path
-        query_params = {'q.field': [],
-                        'q.value': [],
-                        'q.op': [], }
-        for query in q:
-            for name in ['field', 'op', 'value']:
-                query_params['q.%s' % name].append(query.get(name, ''))
-
-        all_params = {}
-        all_params.update(params)
-        if q:
-            all_params.update(query_params)
-
-        response = self.app.get(full_path,
-                                params=all_params,
-                                headers=headers,
-                                extra_environ=extra_environ,
-                                expect_errors=expect_errors)
-
-        if not expect_errors:
-            response = response
-
-        return response
+class TestGraffiti(pecan_base.TestCase):
 
     def test_get_all(self):
         response = self.get_json('/resource')
+        self.assertEqual(response.status_int, 200)
+        self.assertEqual(response.content_type, 'application/json')
+
+    def test_post(self):
+        resource_json = {
+            "name": "Cirros",
+            "id": "0000-0000-0000-0000",
+            "description": "Some Image",
+            "provider": {
+                "id": "1111-1111-1111-1111"
+            },
+            "capabilities": [
+                {
+                    "capability_type": "MySQL",
+                    "capability_type_namespace": "TestNamespace",
+                    "properties": [
+                        {
+                            "name": "CPU",
+                            "value": "4"
+                        },
+                        {
+                            "name": "RAM",
+                            "value": "4GB"
+                        }
+                    ]
+                }
+            ],
+            "properties": [
+                {
+                    "name": "os",
+                    "value": "ubuntu"
+                },
+                {
+                    "name": "os_version",
+                    "value": "12.04"
+                }
+            ],
+            "requirements": [
+                {
+                    "capability_type": "Apache",
+                    "capability_type_namespace": "TestNamespace",
+                    "criterion": "Wayne !SLEEPING"
+                }
+            ],
+            "type": "OS::Image"}
+
+        response = self.post_json('/resource', params=resource_json)
         self.assertEqual(response.status_int, 200)
         self.assertEqual(response.content_type, 'application/json')
