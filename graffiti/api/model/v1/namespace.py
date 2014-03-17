@@ -13,13 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from graffiti.api.controllers.v1.capability_type import \
-    CapabilityTypeController
-from graffiti.api.controllers.v1.namespace import NamespaceController
-from graffiti.api.controllers.v1.resource import ResourceController
+import wsme
+from wsme import types
 
 
-class V1Controller(object):
-    namespace = NamespaceController()
-    capability_type = CapabilityTypeController()
-    resource = ResourceController()
+class Namespace(types.Base):
+    name = wsme.wsattr(types.text, mandatory=True)
+    scope = wsme.wsattr(types.text, mandatory=True)
+    owner = wsme.wsattr(types.text, mandatory=True)
+
+    def __init__(self, **kwargs):
+        super(Namespace, self).__init__(**kwargs)
