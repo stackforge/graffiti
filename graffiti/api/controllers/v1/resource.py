@@ -20,7 +20,8 @@ from wsmeext.pecan import wsexpose
 
 from graffiti.api.model.v1.resource import Resource
 
-from graffiti.api.model.v1.resource_controller import LocalResourceController
+from graffiti.api.model.v1.resource_controller_factory import \
+    ResourceControllerFactory
 
 from graffiti.common.utils import _
 
@@ -52,8 +53,7 @@ class ResourceController(RestController):
         controller_type = cfg.CONF.resource_controller.type
         controller_type = controller_type if controller_type else 'Local'
 
-        # TODO(lakshmi): Load the controller here
-        _controller = LocalResourceController()
+        _controller = ResourceControllerFactory.create(controller_type)
 
         return _controller
 
