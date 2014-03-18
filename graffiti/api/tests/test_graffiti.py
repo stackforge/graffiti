@@ -19,163 +19,50 @@ test_graffiti
 
 Tests for `graffiti` module.
 """
+import json
+
 from graffiti.api.tests import pecan_base
+
+TEST_DATA_FILE = "graffiti/api/tests/samples/resource_2014-1.json"
+
+
+def get_resource_list():
+    json_data_file = open(TEST_DATA_FILE)
+    json_data = json_data_file.read()
+    json_data_file.close()
+    resource_list_json = json.loads(json_data)['resource_list']
+    return resource_list_json
 
 
 class TestGraffiti(pecan_base.TestCase):
 
-    def test_get_all(self):
+    def test_get_all_empty(self):
         response = self.get_json('/resource')
         self.assertEqual(response.status_int, 200)
         self.assertEqual(response.content_type, 'application/json')
+        self.assertEqual(response.json, [])
 
     def test_post(self):
-        resource_json = {
-            "name": "Cirros",
-            "id": "0000-0000-0000-0000",
-            "description": "Some Image",
-            "provider": {
-                "id": "1111-1111-1111-1111"
-            },
-            "capabilities": [
-                {
-                    "capability_type": "MySQL",
-                    "capability_type_namespace": "TestNamespace",
-                    "properties": [
-                        {
-                            "name": "CPU",
-                            "value": "4"
-                        },
-                        {
-                            "name": "RAM",
-                            "value": "4GB"
-                        }
-                    ]
-                }
-            ],
-            "properties": [
-                {
-                    "name": "os",
-                    "value": "ubuntu"
-                },
-                {
-                    "name": "os_version",
-                    "value": "12.04"
-                }
-            ],
-            "requirements": [
-                {
-                    "capability_type": "Apache",
-                    "capability_type_namespace": "TestNamespace",
-                    "criterion": "Wayne !SLEEPING"
-                }
-            ],
-            "type": "OS::Image"}
-
-        response = self.post_json('/resource', params=resource_json)
+        standard_resource_json = get_resource_list()[0]
+        response = self.post_json('/resource', params=standard_resource_json)
         self.assertEqual(response.status_int, 200)
         self.assertEqual(response.content_type, 'application/json')
+        self.assertEqual(response.json, standard_resource_json)
 
     def test_get_one(self):
-        resource_json = {
-            "name": "Cirros",
-            "id": "0000-0000-0000-0000",
-            "description": "Some Image",
-            "provider": {
-                "id": "1111-1111-1111-1111"
-            },
-            "capabilities": [
-                {
-                    "capability_type": "MySQL",
-                    "capability_type_namespace": "TestNamespace",
-                    "properties": [
-                        {
-                            "name": "CPU",
-                            "value": "4"
-                        },
-                        {
-                            "name": "RAM",
-                            "value": "4GB"
-                        }
-                    ]
-                }
-            ],
-            "properties": [
-                {
-                    "name": "os",
-                    "value": "ubuntu"
-                },
-                {
-                    "name": "os_version",
-                    "value": "12.04"
-                }
-            ],
-            "requirements": [
-                {
-                    "capability_type": "Apache",
-                    "capability_type_namespace": "TestNamespace",
-                    "criterion": "Wayne !SLEEPING"
-                }
-            ],
-            "type": "OS::Image"}
-
-        self.post_json('/resource', params=resource_json)
-
-        response = self.get_json('/resource/%s' % resource_json['id'])
+        standard_resource_json = get_resource_list()[0]
+        self.post_json('/resource', params=standard_resource_json)
+        response = self.get_json('/resource/%s' % standard_resource_json['id'])
         self.assertEqual(response.status_int, 200)
         self.assertEqual(response.content_type, 'application/json')
-        self.assertEqual(response.json['id'], resource_json['id'])
+        self.assertEqual(response.json, standard_resource_json)
 
     def test_put(self):
-        resource_json = {
-            "name": "Cirros",
-            "id": "0000-0000-0000-0000",
-            "description": "Some Image",
-            "provider": {
-                "id": "1111-1111-1111-1111"
-            },
-            "capabilities": [
-                {
-                    "capability_type": "MySQL",
-                    "capability_type_namespace": "TestNamespace",
-                    "properties": [
-                        {
-                            "name": "CPU",
-                            "value": "4"
-                        },
-                        {
-                            "name": "RAM",
-                            "value": "4GB"
-                        }
-                    ]
-                }
-            ],
-            "properties": [
-                {
-                    "name": "os",
-                    "value": "ubuntu"
-                },
-                {
-                    "name": "os_version",
-                    "value": "12.04"
-                }
-            ],
-            "requirements": [
-                {
-                    "capability_type": "Apache",
-                    "capability_type_namespace": "TestNamespace",
-                    "criterion": "Wayne !SLEEPING"
-                }
-            ],
-            "type": "OS::Image"}
-
-        self.post_json('/resource', params=resource_json)
-
-        resource_json["name"] = "Nimbulus"
-
-        response = self.put_json('/resource/%s' % resource_json['id'],
-                                 params=resource_json)
+        standard_resource_json = get_resource_list()[0]
+        self.post_json('/resource', params=standard_resource_json)
+        standard_resource_json['name'] = 'RENAMED'
+        response = self.put_json('/resource/%s' % standard_resource_json['id'],
+                                 params=standard_resource_json)
         self.assertEqual(response.status_int, 200)
         self.assertEqual(response.content_type, 'application/json')
-        response_json = response.json
-        self.assertEqual(response_json['name'], 'Nimbulus')
+        self.assertEqual(response.json, standard_resource_json)

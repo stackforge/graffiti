@@ -1,0 +1,59 @@
+{"resource_list": [
+    {
+        "name": "StandardResource",
+        "id": "0000-0000-0000-0000",
+        "description": "This is a standard resource definition",
+        "provider": {
+            "id": "1111-0000-0000-0000"
+        },
+        "capabilities": [
+        {
+            "capability_type": "StandardCapability1",
+            "capability_type_namespace": "TEST:RESOURCE:2014-1",
+            "properties": [
+            {
+                "name": "StandardCapabilityProperty1",
+                "value": "SCP1"
+            },
+            {
+                "name": "StandardCapabilityProperty2",
+                "value": "SCP2"
+            }]
+        },
+        {
+            "capability_type": "StandardCapability2",
+            "capability_type_namespace": "TEST:RESOURCE:2014-1",
+            "properties": [
+            {
+                "name": "StandardCapabilityProperty3",
+                "value": "SCP3"
+            },
+            {
+                "name": "StandardCapabilityProperty4",
+                "value": "SCP4"
+            }]
+        }],
+        "properties": [
+        {
+            "name": "StandardResourceProperty1",
+            "value": "SRP1"
+        },
+        {
+            "name": "StandardResourceProperty2",
+            "value": "SRP2"
+        }],
+        "requirements": [
+        {
+            "capability_type": "StandardRequirement1",
+            "capability_type_namespace": "TEST:RESOURCE:2014-1",
+            "criterion": "StandardCriterion1"
+        },
+        {
+            "capability_type": "StandardRequirement2",
+            "capability_type_namespace": "TEST:RESOURCE:2014-1",
+            "criterion": "StandardCriterion2"
+        }],
+        "type": "TEST:RESOURCE:2014-1:StandardResource"
+    }]
+}
+    
