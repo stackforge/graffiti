@@ -24,6 +24,9 @@ class ResourceControllerBase(object):
     def get_resource(self, id):
         return None
 
+    def get_type(self):
+        return self._type
+
     def find_resources(self, query_string):
         return []
 

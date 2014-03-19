@@ -25,6 +25,9 @@ from graffiti.api.tests import base
 from graffiti.api.controllers.root import RootController
 from graffiti.api.controllers.versions import V1Controller
 
+from graffiti.api.model.v1.resource_controller_factory \
+    import ResourceControllerFactory
+
 
 class TestControllerV1(base.TestCase):
 
@@ -35,3 +38,11 @@ class TestControllerV1(base.TestCase):
     def test_v1_resource_exists(self):
         v1 = V1Controller()
         self.assertIn(hasattr(v1, 'resource'), [True])
+
+    def test_v1_resource_controller_factory__local(self):
+        rc = ResourceControllerFactory.create('local')
+        self.assertEquals(rc.get_type(), 'LocalResourceController')
+
+    def test_v1_resource_controller_factory__unknown(self):
+        rc = ResourceControllerFactory.create('invalid_controller')
+        self.assertTrue(rc is None)
