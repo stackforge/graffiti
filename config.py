@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from oslo.config import cfg
+
 # Server Specific Configurations
 server = {
     'port': '21075',
@@ -59,9 +61,84 @@ wsme = {
     'debug': True
 }
 
+
 # Custom Configurations must be in Python dictionary format::
 #
 # foo = {'bar':'baz'}
 #
 # All configurations are accessible at::
 # pecan.conf
+
+# oslo config
+keystone_group = cfg.OptGroup('keystone')
+keystone_opts = [
+    cfg.StrOpt('auth_url',
+               default='http://192.168.40.10:5000/v2.0',
+               help='keystone authorization url'),
+    cfg.StrOpt('username',
+               default='admin',
+               help='keystone username'),
+    cfg.StrOpt('password',
+               default='secretword',
+               help='keystone password'),
+    cfg.StrOpt('tenant_name',
+               default='admin',
+               help='keystone tenant name')
+
+]
+cfg.CONF.register_group(keystone_group)
+cfg.CONF.register_opts(keystone_opts, group=keystone_group)
+
+# DEFAULT group
+default_controller_group = cfg.OptGroup('DEFAULT')
+default_controller_opts = [
+    cfg.StrOpt(
+        'persistence_type',
+        default="memory",
+        help=("persistence options. "
+              "values = 'memory' or 'file' or 'db"))
+]
+
+cfg.CONF.register_group(default_controller_group)
+cfg.CONF.register_opts(default_controller_opts,
+                       group=default_controller_group)
+
+# FILE_PERSISTENCE group
+file_controller_group = cfg.OptGroup('FILE_PERSISTENCE')
+file_controller_opts = [
+    cfg.StrOpt(
+        'dictionary_folder',
+        default="/tmp/graffiti-dictionary/",
+        help=("Absolute path of the file for persisting dictionary")
+    )
+]
+
+cfg.CONF.register_group(file_controller_group)
+cfg.CONF.register_opts(file_controller_opts,
+                       group=file_controller_group)
+
+
+# Used for remote debugging, like pychcharms or pydev
+#  To enable remote debugging in pycharms, requires that you put the
+#  pycharm-debug.egg in the python path. E.g.
+#
+# Include the pycharm-debug.egg archive.
+# e.g. /home/<USERNAME>/pycharm-3.1.1/pycharm-debug.egg
+# You can do it in a number of ways, for example:
+#   Add the archive to PYTHONPATH.e,g,
+#      export PYTHONPATH+=.:/home/<USERNAME>/pycharm-3.1.1/pycharm-debug.egg
+#   Append the archive to sys.path. e.g.
+#      import sys
+#      sys.path.append('/home/<USERNANE>/pycharm-3.1.1/pycharm-debug.egg')
+#   Just copy the pydev from the archive to the directory where your remote
+#   script resides.
+#
+# You will need to setup a debug configuration in your pycharms and start the
+# debugger BEFORE starting pecan
+# This is because the following code connects from here to your pycharms
+# (or your pydev)
+pydevd = {
+    'enabled': True,
+    'port': 22075,
+    'bindhost': 'localhost'
+}

@@ -14,14 +14,30 @@
 # limitations under the License.
 
 
-import wsme
-from wsme import types
+from ns_controller import NSTypeControllerBase
 
 
-class Namespace(types.Base):
-    name = wsme.wsattr(types.text, mandatory=True)
-    scope = wsme.wsattr(types.text, mandatory=True)
-    owner = wsme.wsattr(types.text, mandatory=False)
+# TODO(Wayne): Implement the db controller
+class DBNSController(NSTypeControllerBase):
 
     def __init__(self, **kwargs):
-        super(Namespace, self).__init__(**kwargs)
+        super(DBNSController, self).__init__(**kwargs)
+        self._type = 'DBNSController'
+
+    def get_type(self):
+        return self._type
+
+    def get_namespace(self, namespace_name):
+        pass
+
+    def find_namespaces(self, query_string):
+        pass
+
+    def set_namespace(self, namespace):
+        pass
+
+    def put_namespace(self, namespace_name, namespace):
+        pass
+
+    def delete_namespace(self, namespace_name):
+        pass

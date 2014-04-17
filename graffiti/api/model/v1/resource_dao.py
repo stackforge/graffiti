@@ -14,10 +14,10 @@
 # limitations under the License.
 
 
-class ResourceControllerBase(object):
+class ResourceDAOBase(object):
 
     def __init__(self, **kwargs):
-        super(ResourceControllerBase, self).__init__(**kwargs)
+        super(ResourceDAOBase, self).__init__(**kwargs)
 
         self._type = 'None'
 
@@ -34,12 +34,12 @@ class ResourceControllerBase(object):
         pass
 
 
-class LocalResourceController(ResourceControllerBase):
+class LocalResourceDAO(ResourceDAOBase):
 
     def __init__(self, **kwargs):
-        super(LocalResourceController, self).__init__(**kwargs)
+        super(LocalResourceDAO, self).__init__(**kwargs)
 
-        self._type = 'LocalResourceController'
+        self._type = 'LocalResourceDAO'
 
         self._resources = dict()
         self._last_id = 0

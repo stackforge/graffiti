@@ -3,3 +3,4 @@ Babel>=0.9.6
 pecan>=0.4.4
 WSME>=0.6
 oslo.config
+python-glanceclient

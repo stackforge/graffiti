@@ -14,14 +14,26 @@
 # limitations under the License.
 
 
-import wsme
-from wsme import types
-
-
-class Namespace(types.Base):
-    name = wsme.wsattr(types.text, mandatory=True)
-    scope = wsme.wsattr(types.text, mandatory=True)
-    owner = wsme.wsattr(types.text, mandatory=False)
+class CapabilityTypeControllerBase(object):
 
     def __init__(self, **kwargs):
-        super(Namespace, self).__init__(**kwargs)
+        super(CapabilityTypeControllerBase, self).__init__(**kwargs)
+        self._type = 'None'
+
+    def get_capability_type(self, name, namespace):
+        return None
+
+    def get_type(self):
+        return self._type
+
+    def find_capability_types(self, query_string):
+        return []
+
+    def set_capability_type(self, capability_type=None):
+        pass
+
+    def put_capability_type(self, name, namespace, capability_type=None):
+        pass
+
+    def delete_capability_type(self, name, namespace):
+        pass

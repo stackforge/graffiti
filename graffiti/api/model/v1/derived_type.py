@@ -13,15 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import wsme
 from wsme import types
 
 
-class Namespace(types.Base):
+class DerivedType(types.Base):
     name = wsme.wsattr(types.text, mandatory=True)
-    scope = wsme.wsattr(types.text, mandatory=True)
-    owner = wsme.wsattr(types.text, mandatory=False)
+    namespace = wsme.wsattr(types.text, mandatory=True)
+
+    _wsme_attr_order = ('name', 'namespace')
 
     def __init__(self, **kwargs):
-        super(Namespace, self).__init__(**kwargs)
+        super(DerivedType, self).__init__(**kwargs)

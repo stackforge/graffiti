@@ -13,15 +13,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import wsme
-from wsme import types
+from captype_controller import CapabilityTypeControllerBase
 
 
-class Namespace(types.Base):
-    name = wsme.wsattr(types.text, mandatory=True)
-    scope = wsme.wsattr(types.text, mandatory=True)
-    owner = wsme.wsattr(types.text, mandatory=False)
+# TODO(Wayne): Implement the db controller
+class DBCapabilityTypeController(CapabilityTypeControllerBase):
 
     def __init__(self, **kwargs):
-        super(Namespace, self).__init__(**kwargs)
+        super(DBCapabilityTypeController, self).__init__(**kwargs)
+        self._type = 'DBCapabilityTypeController'
+
+    def get_capability_type(self, name, namespace):
+        pass
+
+    def find_capability_types(self, query_string):
+        pass
+
+    def set_capability_type(self, capability_type=None):
+        pass
+
+    def put_capability_type(self, name, namespace, capability_type=None):
+        pass
+
+    def delete_capability_type(self, name, namespace):
+        pass

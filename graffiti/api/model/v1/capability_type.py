@@ -16,11 +16,17 @@
 import wsme
 from wsme import types
 
+from graffiti.api.model.v1.derived_type import DerivedType
+from graffiti.api.model.v1.property_type import PropertyType
+
 
 class CapabilityType(types.Base):
+
     name = wsme.wsattr(types.text, mandatory=True)
     namespace = wsme.wsattr(types.text, mandatory=True)
     description = wsme.wsattr(types.text, mandatory=False)
+    properties = wsme.wsattr({types.text: PropertyType}, mandatory=False)
+    derived_from = wsme.wsattr(DerivedType, mandatory=False)
 
     def __init__(self, **kwargs):
         super(CapabilityType, self).__init__(**kwargs)

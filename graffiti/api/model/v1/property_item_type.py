@@ -13,15 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import wsme
 from wsme import types
 
 
-class Namespace(types.Base):
-    name = wsme.wsattr(types.text, mandatory=True)
-    scope = wsme.wsattr(types.text, mandatory=True)
-    owner = wsme.wsattr(types.text, mandatory=False)
+class ItemType(types.Base):
+    type = wsme.wsattr(types.text, mandatory=True)
+    enum = wsme.wsattr([types.text], mandatory=False)
+
+    _wsme_attr_order = ('type', 'enum')
 
     def __init__(self, **kwargs):
-        super(Namespace, self).__init__(**kwargs)
+        super(ItemType, self).__init__(**kwargs)

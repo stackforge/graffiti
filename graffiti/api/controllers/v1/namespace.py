@@ -17,40 +17,55 @@ from pecan.rest import RestController
 
 from wsmeext.pecan import wsexpose
 
+from graffiti.api.controllers.v1.ns_controller_factory\
+    import NSControllerFactory
 from graffiti.api.model.v1.namespace import Namespace
-
+from oslo.config import cfg
 import six
-
-namespaces = []
 
 
 class NamespaceController(RestController):
     def __init__(self):
         super(RestController, self).__init__()
         self.status = 200
+        self._controller = self._load_controller()
+
+    def _load_controller(self):
+        controller_type = cfg.CONF.DEFAULT.persistence_type
+        _controller = NSControllerFactory.create(controller_type)
+        return _controller
 
     @wsexpose
-    def options():
+    def options(self):
         pass
 
     @wsexpose(Namespace, six.text_type)
-    def get_one(self, name):
-        global namespaces
-
-        for namespace in namespaces:
-            if namespace.name.lower() == name.lower():
-                return namespace
-
-        res = Namespace(Namespace(), status_code=404,
-                        error="Namespace Not Found")
-        return res
+    def get_one(self, namespace_name):
+        namespace = self._controller.get_namespace(namespace_name)
+        return namespace
 
     @wsexpose([Namespace])
-    def get_all(self):
-        global namespaces
-        return namespaces
+    def get_all(self, query_string=None):
+        namespace_list = self._controller.find_namespaces(query_string)
+        return namespace_list
 
     @wsexpose(Namespace, body=Namespace)
     def post(self, namespace):
-        global namespaces
-        namespaces.append(namespace)
+        """Create Namespace
+        :namespace param:
+         graffiti.api.model.v1.namespace.Namespace
+        """
+
+        self._controller.set_namespace(namespace)
+        return namespace
+
+    @wsexpose(Namespace, six.text_type, body=Namespace)
+    def put(self, namespace_name, namespace):
+        self._controller.put_namespace(namespace_name, namespace)
+        return namespace
+
+    @wsexpose(Namespace, six.text_type)
+    def delete(self, namespace_name):
+        print "namespace", namespace_name
+        namespace = self._controller.delete_namespace(namespace_name)
+        return namespace

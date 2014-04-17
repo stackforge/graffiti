@@ -18,9 +18,38 @@
 import os
 
 import fixtures
+from oslo.config import cfg
 import testtools
 
 _TRUE_VALUES = ('True', 'true', '1', 'yes')
+
+# DEFAULT group
+default_controller_group = cfg.OptGroup('DEFAULT')
+default_controller_opts = [
+    cfg.StrOpt(
+        'persistence_type',
+        default="memory",
+        help=("persistence options. "
+              "values = 'memory' or 'file' or 'db"))
+]
+
+cfg.CONF.register_group(default_controller_group)
+cfg.CONF.register_opts(default_controller_opts,
+                       group=default_controller_group)
+
+# FILE_PERSISTENCE group
+file_controller_group = cfg.OptGroup('FILE_PERSISTENCE')
+file_controller_opts = [
+    cfg.StrOpt(
+        'dictionary_folder',
+        default="/tmp/graffiti-dictionary-test/",
+        help=("Absolute path of the file for persisting dictionary")
+    )
+]
+
+cfg.CONF.register_group(file_controller_group)
+cfg.CONF.register_opts(file_controller_opts,
+                       group=file_controller_group)
 
 
 class TestCase(testtools.TestCase):

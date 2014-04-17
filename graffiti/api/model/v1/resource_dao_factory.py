@@ -13,15 +13,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import wsme
-from wsme import types
+from graffiti.api.model.v1.resource_dao import LocalResourceDAO
 
 
-class Namespace(types.Base):
-    name = wsme.wsattr(types.text, mandatory=True)
-    scope = wsme.wsattr(types.text, mandatory=True)
-    owner = wsme.wsattr(types.text, mandatory=False)
+class ResourceDAOFactory(object):
 
     def __init__(self, **kwargs):
-        super(Namespace, self).__init__(**kwargs)
+        super(ResourceDAOFactory, self).__init__(**kwargs)
+
+    @staticmethod
+    def create(dao_type, **kwargs):
+        if dao_type.lower() == 'local':
+            return LocalResourceDAO(**kwargs)
+
+        return None

@@ -13,17 +13,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from graffiti.api.model.v1.resource_controller import LocalResourceController
 
-
-class ResourceControllerFactory(object):
+class NSTypeControllerBase(object):
 
     def __init__(self, **kwargs):
-        super(ResourceControllerFactory, self).__init__(**kwargs)
+        super(NSTypeControllerBase, self).__init__(**kwargs)
+        self._type = 'None'
 
-    @staticmethod
-    def create(controller_type, **kwargs):
-        if controller_type.lower() == 'local':
-            return LocalResourceController(**kwargs)
-
+    def get_namespace(self, namespace_name):
         return None
+
+    def get_type(self):
+        return self._type
+
+    def find_namespaces(self, query_string):
+        return []
+
+    def set_namespace(self, namespace):
+        pass
+
+    def put_namespace(self, namespace_name, namespace):
+        pass
+
+    def delete_namespace(self, namespace_name):
+        pass

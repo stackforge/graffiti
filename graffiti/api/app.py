@@ -26,6 +26,22 @@ CONF = cfg.CONF
 
 def setup_app(config):
 
+    if hasattr(config, 'pydevd') and config.pydevd.enabled:
+        try:
+            print(
+                'Remote debug set to true(config.pydevd).  '
+                'Attempting connection'
+            )
+            import pydevd
+            pydevd.settrace(
+                config.pydevd.bindhost,
+                port=config.pydevd.port,
+                stdoutToServer=True,
+                stderrToServer=True,
+                suspend=False)
+        except Exception as e:
+            print "Debug Connection Error:", e
+
     model.init_model()
     app_conf = dict(config.app)
 

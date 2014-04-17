@@ -1,0 +1,7 @@
+[DEFAULT]
+
+#Allowed values= memory, file, db. Default value is memory
+persistence_type=memory
+
+[FILE_PERSISTENCE]
+dictionary_folder=/tmp/graffiti-dictionary/
