@@ -17,8 +17,10 @@
 import wsme
 from wsme import types
 
+from graffiti.common.db_utils import DbTransformer
 
-class Namespace(types.Base):
+
+class Namespace(types.Base, DbTransformer):
     name = wsme.wsattr(types.text, mandatory=True)
     scope = wsme.wsattr(types.text, mandatory=True)
     owner = wsme.wsattr(types.text, mandatory=False)

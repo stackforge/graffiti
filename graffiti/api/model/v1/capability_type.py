@@ -18,9 +18,10 @@ from wsme import types
 
 from graffiti.api.model.v1.derived_type import DerivedType
 from graffiti.api.model.v1.property_type import PropertyType
+from graffiti.common.db_utils import DbTransformer
 
 
-class CapabilityType(types.Base):
+class CapabilityType(types.Base, DbTransformer):
 
     name = wsme.wsattr(types.text, mandatory=True)
     namespace = wsme.wsattr(types.text, mandatory=True)

@@ -13,11 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+from graffiti.api.model.v1.namespace import Namespace
+from graffiti.db import api as dbapi
 from ns_controller import NSTypeControllerBase
 
 
-# TODO(Wayne): Implement the db controller
 class DBNSController(NSTypeControllerBase):
 
     def __init__(self, **kwargs):
@@ -28,16 +28,30 @@ class DBNSController(NSTypeControllerBase):
         return self._type
 
     def get_namespace(self, namespace_name):
-        pass
+        db_namespace = dbapi.namespace_get(namespace_name)
+        if not db_namespace:
+            res = Namespace(Namespace(), status_code=404,
+                            error="Namespace Not Found")
+            return res
+
+        return Namespace.to_model(db_namespace)
 
     def find_namespaces(self, query_string):
-        pass
+        dbnamespaces = dbapi.namespace_get_all()
+        namespaces = []
+        for ns in dbnamespaces:
+            namespaces.append(Namespace.to_model(ns))
+        return namespaces
 
     def set_namespace(self, namespace):
-        pass
+        created_namespace = dbapi.namespace_create(namespace.to_dict())
+        return Namespace.to_model(created_namespace)
 
     def put_namespace(self, namespace_name, namespace):
-        pass
+        dbapi.namespace_update(namespace_name, namespace.to_dict())
 
     def delete_namespace(self, namespace_name):
-        pass
+        db_namespace = dbapi.namespace_get(namespace_name)
+        if db_namespace:
+            dbapi.namespace_delete(namespace_name)
+            return Namespace.to_model(db_namespace)

@@ -9,3 +9,7 @@ oslo.sphinx
 testrepository>=0.0.17
 testscenarios>=0.4,<0.5
 testtools>=0.9.32
+
+posix_ipc>=0.9.8
+MySQL-python
+psycopg2
