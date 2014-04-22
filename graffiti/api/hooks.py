@@ -24,7 +24,7 @@ class CorsHook(PecanHook):
         state.response.headers['Access-Control-Allow-Methods'] = \
             'GET, PUT, POST, DELETE, OPTIONS'
         state.response.headers['Access-Control-Allow-Headers'] = \
-            'origin, authorization, accept, content-type'
+            'origin, authorization, accept, content-type, X-Auth-Token'
 
         if not state.response.headers['Content-Length']:
             state.response.headers['Content-Length'] = \

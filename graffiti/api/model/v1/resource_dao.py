@@ -55,6 +55,7 @@ class LocalResourceDAO(ResourceDAOBase):
             id = self._generate_id()
 
         self._resources[id] = resource_definition
+        return id
 
     def _generate_id(self):
         return_value = self._last_id

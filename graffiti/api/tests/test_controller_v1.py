@@ -78,7 +78,7 @@ class TestControllerV1(base.TestCase):
         self.assertIn(hasattr(v1, 'resource'), [True])
 
     def test_v1_resource_controller_factory__local(self):
-        rc = ResourceDAOFactory.create('local')
+        rc = ResourceDAOFactory.create('memory')
         self.assertEquals(rc.get_type(), 'LocalResourceDAO')
 
     def test_v1_resource_controller_factory__unknown(self):

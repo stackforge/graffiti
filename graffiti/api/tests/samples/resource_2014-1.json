@@ -53,7 +53,7 @@
             "capability_type_namespace": "TEST:RESOURCE:2014-1",
             "criterion": "StandardCriterion2"
         }],
-        "type": "TEST:RESOURCE:2014-1:StandardResource"
+        "type": "GFT::Local"
     }]
 }
     

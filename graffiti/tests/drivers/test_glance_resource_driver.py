@@ -13,18 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from graffiti.api.model.v1.resource_dao import LocalResourceDAO
+
+from graffiti.api.tests import pecan_base
+from graffiti.common import driver_factory
+from graffiti.drivers import base as driver_base
 
 
-class ResourceDAOFactory(object):
+class TestGlanceResourceDriver(pecan_base.TestCase):
 
-    def __init__(self, **kwargs):
-        super(ResourceDAOFactory, self).__init__(**kwargs)
+    def setUp(self):
+        super(TestGlanceResourceDriver, self).setUp()
+        self.driver = driver_factory.get_driver("OS::Glance::Image")
 
-    @staticmethod
-    def create(dao_type, **kwargs):
-        if dao_type.lower() == 'memory':
-            print "Directory persistence = memory"
-            return LocalResourceDAO(**kwargs)
-
-        return None
+    def test_driver_interfaces(self):
+        self.assertIsInstance(
+            self.driver.resource,
+            driver_base.ResourceInterface
+        )

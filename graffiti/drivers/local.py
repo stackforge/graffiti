@@ -13,18 +13,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from graffiti.api.model.v1.resource_dao import LocalResourceDAO
+from graffiti.drivers import base
+from graffiti.drivers.modules import local
 
 
-class ResourceDAOFactory(object):
+class LocalResourceDriver(base.BaseDriver):
+    """This driver implements resource interface locally by graffiti
+    """
 
-    def __init__(self, **kwargs):
-        super(ResourceDAOFactory, self).__init__(**kwargs)
+    def __init__(self):
+        self.resource = local.LocalResourceDriver()
+        self.resource_types = ["GFT::Local"]
 
-    @staticmethod
-    def create(dao_type, **kwargs):
-        if dao_type.lower() == 'memory':
-            print "Directory persistence = memory"
-            return LocalResourceDAO(**kwargs)
-
-        return None
+    def get_resource_types(self):
+        """Returns the resource types supported by the implementing
+        driver
+        :returns [str]  List of resource type strings
+        """
+        return self.resource_types

@@ -15,6 +15,8 @@
 
 from oslo.config import cfg
 
+from graffiti.common import driver_factory
+
 # Server Specific Configurations
 server = {
     'port': '21075',
@@ -142,3 +144,7 @@ pydevd = {
     'port': 22075,
     'bindhost': 'localhost'
 }
+
+
+# Discover and load drivers
+df = driver_factory.DriverFactory()

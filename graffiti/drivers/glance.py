@@ -13,18 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from graffiti.api.model.v1.resource_dao import LocalResourceDAO
+from graffiti.drivers import base
+from graffiti.drivers.modules import glance
 
 
-class ResourceDAOFactory(object):
+class GlanceResourceDriver(base.BaseDriver):
+    """This driver implements glance resource driver interface
+    """
 
-    def __init__(self, **kwargs):
-        super(ResourceDAOFactory, self).__init__(**kwargs)
+    def __init__(self):
+        self.resource = glance.GlanceResourceDriver()
+        self.resource_types = ["OS::Glance::Image"]
 
-    @staticmethod
-    def create(dao_type, **kwargs):
-        if dao_type.lower() == 'memory':
-            print "Directory persistence = memory"
-            return LocalResourceDAO(**kwargs)
-
-        return None
+    def get_resource_types(self):
+        """Returns the resource types supported by the implementing driver
+        :returns [str]  List of resource type strings
+        """
+        return self.resource_types

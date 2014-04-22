@@ -13,34 +13,55 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from graffiti.openstack.common.gettextutils import _
+
 
 class GraffitiException(Exception):
     """Base Exception for the project
 
     To correctly use this class, inherit from it and define
     the 'message' property.
+    That message will get printf'd
+    with the keyword arguments provided to the constructor.
     """
 
-    message = "An unknown exception occurred"
+    message = _("An unknown exception occurred")
 
     def __str__(self):
         return self.message
 
-    def __init__(self):
-        super(GraffitiException, self).__init__(self.message)
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+
+        try:
+            message = self.message % kwargs
+        except KeyError:
+            #TODO(Any): print to log
+            pass
+
+        super(GraffitiException, self).__init__(message)
 
 
 class NotFound(GraffitiException):
-    message = "Object not found"
-
-    def __init__(self, message=None):
-        if message:
-            self.message = message
+    message = _("Object not found")
 
 
 class DuplicateEntry(GraffitiException):
-    message = "Database object already exists"
+    message = _("Database object already exists")
 
-    def __init__(self, message=None):
-        if message:
-            self.message = message
+
+class DriverNotFound(NotFound):
+    message = _("Failed to load driver %(driver_name)s.")
+
+
+class DriverLoadError(GraffitiException):
+    message = _("Driver %(driver)s could not be loaded. Reason: %(reason)s.")
+
+
+class MethodNotSupported(GraffitiException):
+    message = _("Method %(method)s is not supported by this driver")
+
+
+class DriverNotFoundForResourceType(NotFound):
+    message = _("Cannot find a registered driver for the resource "
+                "type %(resource_type)s")

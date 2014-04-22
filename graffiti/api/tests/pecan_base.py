@@ -24,9 +24,10 @@ import os
 import pecan
 import pecan.testing
 
-from oslo.config import cfg
+#from oslo.config import cfg
 
 from graffiti.api.tests import base
+from graffiti.common import driver_factory
 
 
 class TestCase(base.TestCase):
@@ -35,8 +36,9 @@ class TestCase(base.TestCase):
     def setUp(self):
         super(TestCase, self).setUp()
         self.app = self._make_app()
-        cfg.CONF.set_override(name='type', override='Local',
-                              group='resource_controller')
+        #cfg.CONF.set_override(name='type', override='Local',
+        #                      group='resource_controller')
+        driver_factory.DriverFactory()
 
     def _make_app(self):
         root_dir = self.path_get()
