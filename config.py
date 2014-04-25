@@ -75,7 +75,7 @@ wsme = {
 keystone_group = cfg.OptGroup('keystone')
 keystone_opts = [
     cfg.StrOpt('auth_url',
-               default='http://192.168.40.10:5000/v2.0',
+               default='http://127.0.0.1:5000/v2.0',
                help='keystone authorization url'),
     cfg.StrOpt('username',
                default='admin',
