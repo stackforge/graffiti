@@ -64,7 +64,6 @@ class GlanceResourceDriver(base.ResourceInterface):
             # replace if check with pattern matching
             if key.count(self.separator) == 2:
                 (namespace, capability_type, prop_name) = key.split(".")
-                image_properties = []
                 image_property = Property()
                 image_property.name = prop_name
                 image_property.value = glance_image_properties[key]
@@ -77,13 +76,12 @@ class GlanceResourceDriver(base.ResourceInterface):
 
                 if not image_capability:
                     image_capability = Capability()
+                    image_capability.properties = []
                     image_resource.capabilities.append(image_capability)
 
                 image_capability.capability_type_namespace = namespace
                 image_capability.capability_type = capability_type
-                image_properties.append(image_property)
-
-                image_capability.properties = image_properties
+                image_capability.properties.append(image_property)
 
         return image_resource
 
@@ -155,10 +153,16 @@ class GlanceResourceDriver(base.ResourceInterface):
             password=cfg.CONF.keystone.password,
             tenant_name=cfg.CONF.keystone.tenant_name
         )
-        self.__endpoint_list = keystone.endpoints.list()
-        for endpoint in self.__endpoint_list:
-            if endpoint.id == endpoint_id:
-                glance_public_url = endpoint.publicurl
+
+        glance_public_url = None
+        for entry in keystone.service_catalog.catalog.get('serviceCatalog'):
+            for endpoint in entry['endpoints']:
+                if endpoint['id'] == endpoint_id:
+                    glance_public_url = endpoint['publicURL']
+                    break
+            if glance_public_url:
+                break
+
         glance_client = Client(
             '1',
             endpoint=glance_public_url,

@@ -18,10 +18,10 @@ from pecan.rest import RestController
 from wsme.api import Response
 from wsmeext.pecan import wsexpose
 
-from graffiti.api.controllers.v1.captype_controller_factory \
-    import CapTypeControllerFactory
 from graffiti.api.model.v1.capability_type import CapabilityType
-from ns_controller_factory import NSControllerFactory
+from graffiti.api.model.v1.dao.captype_dao_factory \
+    import CapabilityTypeDAOFactory
+from graffiti.api.model.v1.dao.ns_dao_factory import NSDAOFactory
 from oslo.config import cfg
 
 
@@ -37,9 +37,9 @@ class CapabilityTypeController(RestController):
         self._load_controller()
 
     def _load_controller(self):
-        controller_type = cfg.CONF.DEFAULT.persistence_type
-        self._cap_controller = CapTypeControllerFactory.create(controller_type)
-        self._ns_controller = NSControllerFactory.get()
+        dao_type = cfg.CONF.DEFAULT.persistence_type
+        self._cap_controller = CapabilityTypeDAOFactory.create(dao_type)
+        self._ns_controller = NSDAOFactory.get()
 
     @wsexpose
     def options():

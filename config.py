@@ -92,8 +92,8 @@ cfg.CONF.register_group(keystone_group)
 cfg.CONF.register_opts(keystone_opts, group=keystone_group)
 
 # DEFAULT group
-default_controller_group = cfg.OptGroup('DEFAULT')
-default_controller_opts = [
+default_group = cfg.OptGroup('DEFAULT')
+default_opts = [
     cfg.StrOpt(
         'persistence_type',
         default="memory",
@@ -101,13 +101,13 @@ default_controller_opts = [
               "values = 'memory' or 'file' or 'db"))
 ]
 
-cfg.CONF.register_group(default_controller_group)
-cfg.CONF.register_opts(default_controller_opts,
-                       group=default_controller_group)
+cfg.CONF.register_group(default_group)
+cfg.CONF.register_opts(default_opts,
+                       group=default_group)
 
 # FILE_PERSISTENCE group
-file_controller_group = cfg.OptGroup('FILE_PERSISTENCE')
-file_controller_opts = [
+file_group = cfg.OptGroup('FILE_PERSISTENCE')
+file_opts = [
     cfg.StrOpt(
         'dictionary_folder',
         default="/tmp/graffiti-dictionary/",
@@ -115,9 +115,9 @@ file_controller_opts = [
     )
 ]
 
-cfg.CONF.register_group(file_controller_group)
-cfg.CONF.register_opts(file_controller_opts,
-                       group=file_controller_group)
+cfg.CONF.register_group(file_group)
+cfg.CONF.register_opts(file_opts,
+                       group=file_group)
 
 
 # Used for remote debugging, like pychcharms or pydev

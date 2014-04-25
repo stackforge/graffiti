@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from graffiti.api.model.v1.resource_dao_factory import \
+from graffiti.api.model.v1.dao.resource_dao_factory import \
     ResourceDAOFactory
 
 from graffiti.drivers import base
@@ -26,6 +26,7 @@ class LocalResourceDriver(base.ResourceInterface):
     def __init__(self):
         super(LocalResourceDriver, self).__init__()
         persistence_type = cfg.CONF.DEFAULT.persistence_type
+
         self._resource_dao = ResourceDAOFactory.create(persistence_type)
 
     def get_resource(self, resource_id, auth_token, endpoint_id=None,
@@ -66,7 +67,7 @@ class LocalResourceDriver(base.ResourceInterface):
         """
 
         id = resource.id if hasattr(resource, 'id') else None
-        self._resource_dao.set_resource(id, resource_definition=resource)
+        self._resource_dao.set_resource(id, resource=resource)
 
         return resource
 
@@ -81,7 +82,7 @@ class LocalResourceDriver(base.ResourceInterface):
         """
         self._resource_dao.set_resource(
             resource_id,
-            resource_definition=resource
+            resource=resource
         )
         return resource
 

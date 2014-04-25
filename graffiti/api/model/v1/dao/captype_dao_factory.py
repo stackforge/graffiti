@@ -13,30 +13,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from graffiti.api.model.v1.dao.captype_db_dao \
+    import DBCapabilityTypeDAO
+from graffiti.api.model.v1.dao.captype_file_dao \
+    import FileCapabilityTypeDAO
+from graffiti.api.model.v1.dao.captype_mem_dao \
+    import MemCapabilityTypeDAO
 
-from graffiti.api.controllers.v1.captype_db_controller \
-    import DBCapabilityTypeController
-from graffiti.api.controllers.v1.captype_file_controller \
-    import FileCapabilityTypeController
-from graffiti.api.controllers.v1.captype_mem_controller \
-    import MemCapabilityTypeController
 
-
-class CapTypeControllerFactory(object):
+class CapabilityTypeDAOFactory(object):
 
     def __init__(self, **kwargs):
-        super(CapTypeControllerFactory, self).__init__(**kwargs)
+        super(CapabilityTypeDAOFactory, self).__init__(**kwargs)
 
     @staticmethod
-    def create(controller_type, **kwargs):
-        if controller_type.lower() == 'memory':
+    def create(dao_type, **kwargs):
+        if dao_type.lower() == 'memory':
             print "Dictionary persistence = memory"
-            return MemCapabilityTypeController(**kwargs)
-        elif controller_type.lower() == "db":
+            return MemCapabilityTypeDAO(**kwargs)
+        elif dao_type.lower() == "db":
             print "Dictionary persistence = db"
-            return DBCapabilityTypeController(**kwargs)
-        elif controller_type.lower() == "file":
+            return DBCapabilityTypeDAO(**kwargs)
+        elif dao_type.lower() == "file":
             print "Dictionary persistence = File"
-            return FileCapabilityTypeController(**kwargs)
+            return FileCapabilityTypeDAO(**kwargs)
 
         return None

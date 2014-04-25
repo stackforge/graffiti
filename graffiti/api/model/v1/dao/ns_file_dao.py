@@ -14,23 +14,29 @@
 # limitations under the License.
 
 
+from graffiti.api.model.v1.dao.ns_dao import NSDAOBase
 from graffiti.api.model.v1.namespace import Namespace
+
 import json
-from ns_controller import NSTypeControllerBase
+
 from oslo.config import cfg
+
 from wsme.rest.json import fromjson
 from wsme.rest.json import tojson
 
 
-class FileNSController(NSTypeControllerBase):
+class FileNSDAO(NSDAOBase):
 
     def __init__(self, **kwargs):
-        super(FileNSController, self).__init__(**kwargs)
-        self._type = 'FileNSController'
+        super(FileNSDAO, self).__init__(**kwargs)
         self._graffiti_folder = cfg.CONF.FILE_PERSISTENCE.dictionary_folder
         self._filename = "namespaces.json"
         self._namespacefile = self._graffiti_folder + self._filename
         self._namespaces = self.__file_to_memory()
+        self._type = "FileNSDAO"
+
+    def get_type(self):
+        return self._type
 
     def get_namespace(self, namespace_name):
         return self._namespaces[namespace_name]

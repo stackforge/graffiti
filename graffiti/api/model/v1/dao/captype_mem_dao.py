@@ -13,15 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from captype_controller import CapabilityTypeControllerBase
+from graffiti.api.model.v1.dao.captype_dao import CapabilityTypeDAOBase
 
 
-class MemCapabilityTypeController(CapabilityTypeControllerBase):
+class MemCapabilityTypeDAO(CapabilityTypeDAOBase):
 
     def __init__(self, **kwargs):
-        super(MemCapabilityTypeController, self).__init__(**kwargs)
-        self._type = 'MemCapabilityTypeController'
+        super(MemCapabilityTypeDAO, self).__init__(**kwargs)
         self._capability_types = {}
+        self._type = "MemCapabilityTypeDAO"
+
+    def get_type(self):
+        return self._type
 
     def get_capability_type(self, name, namespace):
         id = namespace + ":" + name

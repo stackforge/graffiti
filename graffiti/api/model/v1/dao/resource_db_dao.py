@@ -14,26 +14,27 @@
 # limitations under the License.
 
 
-class NSTypeControllerBase(object):
+from graffiti.api.model.v1.dao.resource_dao import ResourceDAOBase
+
+
+#TODO(Lakshmi): Implement db persistence for resource
+class DBResourceDAO(ResourceDAOBase):
 
     def __init__(self, **kwargs):
-        super(NSTypeControllerBase, self).__init__(**kwargs)
-        self._type = 'None'
-
-    def get_namespace(self, namespace_name):
-        return None
+        super(DBResourceDAO, self).__init__(**kwargs)
+        self._type = "DBResourceDAO"
 
     def get_type(self):
         return self._type
 
-    def find_namespaces(self, query_string):
-        return []
-
-    def set_namespace(self, namespace):
+    def get_resource(self, id):
         pass
 
-    def put_namespace(self, namespace_name, namespace):
+    def find_resources(self, query_string):
         pass
 
-    def delete_namespace(self, namespace_name):
+    def set_resource(self, id=None, resource_definition=None):
+        pass
+
+    def delete_resource(self, id):
         pass

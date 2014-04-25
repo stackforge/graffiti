@@ -13,8 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from captype_controller import CapabilityTypeControllerBase
 from graffiti.api.model.v1.capability_type import CapabilityType
+from graffiti.api.model.v1.dao.captype_dao import CapabilityTypeDAOBase
 from graffiti.api.model.v1.derived_type import DerivedType
 from graffiti.api.model.v1.property_type import PropertyType
 from graffiti.db import api as dbapi
@@ -23,11 +23,14 @@ from wsme.rest.json import fromjson
 from wsme.rest.json import tojson
 
 
-class DBCapabilityTypeController(CapabilityTypeControllerBase):
+class DBCapabilityTypeDAO(CapabilityTypeDAOBase):
 
     def __init__(self, **kwargs):
-        super(DBCapabilityTypeController, self).__init__(**kwargs)
-        self._type = 'DBCapabilityTypeController'
+        super(DBCapabilityTypeDAO, self).__init__(**kwargs)
+        self._type = "DBCapabilityTypeDAO"
+
+    def get_type(self):
+        return self._type
 
     def _to_model(self, db_captype):
         model_captype = CapabilityType.to_model(db_captype)

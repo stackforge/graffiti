@@ -14,35 +14,19 @@
 # limitations under the License.
 
 
-class ResourceDAOBase(object):
+from graffiti.api.model.v1.dao.resource_dao import ResourceDAOBase
+
+
+class MemResourceDAO(ResourceDAOBase):
 
     def __init__(self, **kwargs):
-        super(ResourceDAOBase, self).__init__(**kwargs)
-
-        self._type = 'None'
-
-    def get_resource(self, id):
-        return None
+        super(MemResourceDAO, self).__init__(**kwargs)
+        self._resources = dict()
+        self._last_id = 0
+        self._type = "MemResourceDAO"
 
     def get_type(self):
         return self._type
-
-    def find_resources(self, query_string):
-        return []
-
-    def set_resource(self, id=None, resource_definition=None):
-        pass
-
-
-class LocalResourceDAO(ResourceDAOBase):
-
-    def __init__(self, **kwargs):
-        super(LocalResourceDAO, self).__init__(**kwargs)
-
-        self._type = 'LocalResourceDAO'
-
-        self._resources = dict()
-        self._last_id = 0
 
     def get_resource(self, id):
         return self._resources[id]
@@ -50,12 +34,15 @@ class LocalResourceDAO(ResourceDAOBase):
     def find_resources(self, query_string):
         return self._resources
 
-    def set_resource(self, id=None, resource_definition=None):
+    def set_resource(self, id=None, resource=None):
         if not id:
             id = self._generate_id()
 
-        self._resources[id] = resource_definition
+        self._resources[id] = resource
         return id
+
+    def delete_resource(self, id):
+        pass
 
     def _generate_id(self):
         return_value = self._last_id

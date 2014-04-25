@@ -13,7 +13,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from graffiti.api.model.v1.resource_dao import LocalResourceDAO
+from graffiti.api.model.v1.dao.resource_db_dao import DBResourceDAO
+from graffiti.api.model.v1.dao.resource_file_dao import FileResourceDAO
+from graffiti.api.model.v1.dao.resource_mem_dao import MemResourceDAO
 
 
 class ResourceDAOFactory(object):
@@ -25,6 +27,12 @@ class ResourceDAOFactory(object):
     def create(dao_type, **kwargs):
         if dao_type.lower() == 'memory':
             print "Directory persistence = memory"
-            return LocalResourceDAO(**kwargs)
+            return MemResourceDAO(**kwargs)
+        elif dao_type.lower() == 'file':
+            print "Directory persistence = file"
+            return FileResourceDAO(**kwargs)
+        elif dao_type.lower() == 'db':
+            print "Directory persistence = db"
+            return DBResourceDAO(**kwargs)
 
         return None

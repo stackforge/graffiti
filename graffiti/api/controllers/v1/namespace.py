@@ -17,8 +17,8 @@ from pecan.rest import RestController
 
 from wsmeext.pecan import wsexpose
 
-from graffiti.api.controllers.v1.ns_controller_factory\
-    import NSControllerFactory
+from graffiti.api.model.v1.dao.ns_dao_factory \
+    import NSDAOFactory
 from graffiti.api.model.v1.namespace import Namespace
 from oslo.config import cfg
 import six
@@ -32,7 +32,7 @@ class NamespaceController(RestController):
 
     def _load_controller(self):
         controller_type = cfg.CONF.DEFAULT.persistence_type
-        _controller = NSControllerFactory.create(controller_type)
+        _controller = NSDAOFactory.create(controller_type)
         return _controller
 
     @wsexpose

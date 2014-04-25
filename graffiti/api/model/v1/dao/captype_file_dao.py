@@ -14,23 +14,26 @@
 # limitations under the License.
 
 
-from captype_controller import CapabilityTypeControllerBase
 from graffiti.api.model.v1.capability_type import CapabilityType
+from graffiti.api.model.v1.dao.captype_dao import CapabilityTypeDAOBase
 import json
 from oslo.config import cfg
 from wsme.rest.json import fromjson
 from wsme.rest.json import tojson
 
 
-class FileCapabilityTypeController(CapabilityTypeControllerBase):
+class FileCapabilityTypeDAO(CapabilityTypeDAOBase):
 
     def __init__(self, **kwargs):
-        super(FileCapabilityTypeController, self).__init__(**kwargs)
-        self._type = 'FileCapabilityTypeController'
+        super(FileCapabilityTypeDAO, self).__init__(**kwargs)
         self._graffiti_folder = cfg.CONF.FILE_PERSISTENCE.dictionary_folder
         self._filename = "dictionary.json"
         self._dictionaryfile = self._graffiti_folder + self._filename
         self._capability_types = self.__file_to_memory()
+        self._type = "FileCapabilityTypeDAO"
+
+    def get_type(self):
+        return self._type
 
     def get_capability_type(self, name, namespace):
         id = namespace + ":" + name

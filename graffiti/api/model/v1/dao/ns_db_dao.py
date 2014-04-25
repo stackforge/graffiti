@@ -13,16 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from graffiti.api.model.v1.dao.ns_dao import NSDAOBase
 from graffiti.api.model.v1.namespace import Namespace
 from graffiti.db import api as dbapi
-from ns_controller import NSTypeControllerBase
 
 
-class DBNSController(NSTypeControllerBase):
+class DBNSDAO(NSDAOBase):
 
     def __init__(self, **kwargs):
-        super(DBNSController, self).__init__(**kwargs)
-        self._type = 'DBNSController'
+        super(DBNSDAO, self).__init__(**kwargs)
+        self._type = "DBNSDAO"
 
     def get_type(self):
         return self._type

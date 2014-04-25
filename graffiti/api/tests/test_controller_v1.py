@@ -25,11 +25,11 @@ from graffiti.api.tests import base
 from graffiti.api.controllers.root import RootController
 from graffiti.api.controllers.versions import V1Controller
 
-from graffiti.api.controllers.v1.captype_controller_factory \
-    import CapTypeControllerFactory
-from graffiti.api.controllers.v1.ns_controller_factory \
-    import NSControllerFactory
-from graffiti.api.model.v1.resource_dao_factory \
+from graffiti.api.model.v1.dao.captype_dao_factory \
+    import CapabilityTypeDAOFactory
+from graffiti.api.model.v1.dao.ns_dao_factory \
+    import NSDAOFactory
+from graffiti.api.model.v1.dao.resource_dao_factory \
     import ResourceDAOFactory
 
 
@@ -44,42 +44,50 @@ class TestControllerV1(base.TestCase):
         self.assertIn(hasattr(v1, 'namespace'), [True])
 
     def test_v1_namespace_controller_factory__memory(self):
-        rc = NSControllerFactory.create('memory')
-        self.assertEquals(rc.get_type(), 'MemNSController')
+        rc = NSDAOFactory.create('memory')
+        self.assertEquals(rc.get_type(), 'MemNSDAO')
 
     # TODO(Lakshmi): Create folder before any tests run
     # def test_v1_namespace_controller_factory__file(self):
     #    rc = NSControllerFactory.create('file')
-    #    self.assertEquals(rc.get_type(), 'FileNSController')
+    #    self.assertEquals(rc.get_type(), 'FileNSDAO')
 
     def test_v1_namespace_controller_factory__db(self):
-        rc = NSControllerFactory.create('db')
-        self.assertEquals(rc.get_type(), 'DBNSController')
+        rc = NSDAOFactory.create('db')
+        self.assertEquals(rc.get_type(), 'DBNSDAO')
 
     def test_v1_capability_type_exists(self):
         v1 = V1Controller()
         self.assertIn(hasattr(v1, 'capability_type'), [True])
 
-    def test_v1_capability_type_controller_factory__memory(self):
-        rc = CapTypeControllerFactory.create('memory')
-        self.assertEquals(rc.get_type(), 'MemCapabilityTypeController')
+    def test_v1_capability_type_dao_factory__memory(self):
+        rc = CapabilityTypeDAOFactory.create('memory')
+        self.assertEquals(rc.get_type(), 'MemCapabilityTypeDAO')
 
     # TODO(Lakshmi): Create folder before any tests run
-    # def test_v1_capability_type_controller_factory__file(self):
-    #    rc = CapTypeControllerFactory.create('file')
-    #    self.assertEquals(rc.get_type(), 'FileCapabilityTypeController')
+    # def test_v1_capability_type_dao_factory__file(self):
+    #    rc = CapabilityTypeDAOFactory.create('file')
+    #    self.assertEquals(rc.get_type(), 'FileCapabilityTypeDAO')
 
-    def test_v1_capability_type_controller_factory__db(self):
-        rc = CapTypeControllerFactory.create('db')
-        self.assertEquals(rc.get_type(), 'DBCapabilityTypeController')
+    def test_v1_capability_type_dao_factory__db(self):
+        rc = CapabilityTypeDAOFactory.create('db')
+        self.assertEquals(rc.get_type(), 'DBCapabilityTypeDAO')
 
     def test_v1_resource_exists(self):
         v1 = V1Controller()
         self.assertIn(hasattr(v1, 'resource'), [True])
 
-    def test_v1_resource_controller_factory__local(self):
+    def test_v1_resource_dao_factory__memory(self):
         rc = ResourceDAOFactory.create('memory')
-        self.assertEquals(rc.get_type(), 'LocalResourceDAO')
+        self.assertEquals(rc.get_type(), 'MemResourceDAO')
+
+    def test_v1_resource_dao_factory__file(self):
+        rc = ResourceDAOFactory.create('file')
+        self.assertEquals(rc.get_type(), 'FileResourceDAO')
+
+    def test_v1_resource_dao_factory__db(self):
+        rc = ResourceDAOFactory.create('db')
+        self.assertEquals(rc.get_type(), 'DBResourceDAO')
 
     def test_v1_resource_controller_factory__unknown(self):
         rc = ResourceDAOFactory.create('invalid_controller')

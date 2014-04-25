@@ -14,26 +14,26 @@
 # limitations under the License.
 
 
-class CapabilityTypeControllerBase(object):
+class NSDAOBase(object):
 
     def __init__(self, **kwargs):
-        super(CapabilityTypeControllerBase, self).__init__(**kwargs)
-        self._type = 'None'
-
-    def get_capability_type(self, name, namespace):
-        return None
+        super(NSDAOBase, self).__init__(**kwargs)
+        self._type = "NSDAOBase"
 
     def get_type(self):
         return self._type
 
-    def find_capability_types(self, query_string):
+    def get_namespace(self, namespace_name):
+        return None
+
+    def find_namespaces(self, query_string):
         return []
 
-    def set_capability_type(self, capability_type=None):
+    def set_namespace(self, namespace):
         pass
 
-    def put_capability_type(self, name, namespace, capability_type=None):
+    def put_namespace(self, namespace_name, namespace):
         pass
 
-    def delete_capability_type(self, name, namespace):
+    def delete_namespace(self, namespace_name):
         pass

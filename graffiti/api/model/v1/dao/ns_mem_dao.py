@@ -13,15 +13,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from ns_controller import NSTypeControllerBase
+from graffiti.api.model.v1.dao.ns_dao import NSDAOBase
 
 
-class MemNSController(NSTypeControllerBase):
+class MemNSDAO(NSDAOBase):
 
     def __init__(self, **kwargs):
-        super(MemNSController, self).__init__(**kwargs)
-        self._type = 'MemNSController'
+        super(MemNSDAO, self).__init__(**kwargs)
         self._namespaces = {}
+        self._type = "MemNSDAO"
 
     def get_type(self):
         return self._type
