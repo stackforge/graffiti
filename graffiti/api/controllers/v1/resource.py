@@ -79,6 +79,7 @@ class ResourceController(RestController):
         driver = driver_factory.get_driver(resource_type)
         if driver.resource:
             res = driver.resource.get_resource(
+                resource_type,
                 resource_id,
                 auth_token,
                 endpoint_id
@@ -132,6 +133,7 @@ class ResourceController(RestController):
         driver = driver_factory.get_driver(resource_type)
         if driver.resource:
             driver.resource.update_resource(
+                resource_type,
                 resource_id,
                 resource,
                 auth_token,
@@ -157,6 +159,10 @@ class ResourceController(RestController):
 
         driver = driver_factory.get_driver(resource_type)
         if driver.resource:
-            resource = driver.resource.create_resource(resource, auth_token)
+            resource = driver.resource.create_resource(
+                resource_type,
+                resource,
+                auth_token
+            )
 
         return resource

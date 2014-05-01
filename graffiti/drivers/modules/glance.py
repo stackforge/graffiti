@@ -30,10 +30,16 @@ class GlanceResourceDriver(base.ResourceInterface):
     def __init__(self):
         super(GlanceResourceDriver, self).__init__()
         self.separator = "."
+        self.service_type = 'image'
+        self.endpoint_type = 'publicURL'
+        self.default_namespace = "Default"
+        self.default_capability_type = "Default"
+        self.default_resource_type = "OS::Glance::Image"
 
-    def get_resource(self, resource_id, auth_token, endpoint_id=None,
-                     **kwargs):
+    def get_resource(self, resource_type, resource_id, auth_token,
+                     endpoint_id=None, **kwargs):
         """Retrieve the resource detail
+        :param resource_type: resource_type set for this call
         :param resource_id: unique resource identifier
         :param auth_token: keystone auth_token of request user
         :param endpoint_id: id for locating the cloud resource provider
@@ -51,43 +57,14 @@ class GlanceResourceDriver(base.ResourceInterface):
         glance_client = self.__get_glance_client(endpoint_id, auth_token)
 
         image = glance_client.images.get(resource_id)
-        glance_image_properties = image.properties
-        image_resource = Resource()
-        image_capabilities = []
-        image_resource.capabilities = image_capabilities
-
-        image_resource.id = resource_id
-        image_resource.type = 'image'
-        image_resource.name = image.name
-
-        for key in glance_image_properties:
-            # replace if check with pattern matching
-            if key.count(self.separator) == 2:
-                (namespace, capability_type, prop_name) = key.split(".")
-                image_property = Property()
-                image_property.name = prop_name
-                image_property.value = glance_image_properties[key]
-
-                image_capability = None
-                for capability in image_resource.capabilities:
-                    if capability.capability_type_namespace == namespace and \
-                            capability.capability_type == capability_type:
-                        image_capability = capability
-
-                if not image_capability:
-                    image_capability = Capability()
-                    image_capability.properties = []
-                    image_resource.capabilities.append(image_capability)
-
-                image_capability.capability_type_namespace = namespace
-                image_capability.capability_type = capability_type
-                image_capability.properties.append(image_property)
+        image_resource = self.transform_image_to_resource(resource_type, image)
 
         return image_resource
 
-    def update_resource(self, resource_id, resource, auth_token,
+    def update_resource(self, resource_type, resource_id, resource, auth_token,
                         endpoint_id=None, **kwargs):
         """Update resource
+        :param resource_type: resource_type set for this call
         :param resource_id: unique resource identifier
         :param resource: resource detail
         :type param: graffiti.api.model.v1.resource.Resource
@@ -101,34 +78,50 @@ class GlanceResourceDriver(base.ResourceInterface):
         image_properties = {}
         for capability in resource.capabilities:
             properties = capability.properties
-            capability_type = capability.capability_type
-            capability_type_namespace = capability.capability_type_namespace
+            capability_type = self.replace_colon_from_name(
+                capability.capability_type
+            )
+            capability_type_namespace = self.replace_colon_from_name(
+                capability.capability_type_namespace
+            )
+
             for property in properties:
                 prop_name = capability_type_namespace + \
                     self.separator + \
                     capability_type + \
                     self.separator + \
-                    property.name
+                    self.replace_colon_from_name(property.name)
                 image_properties[prop_name] = property.value
 
         image = glance_client.images.get(resource.id)
         image.update(properties=image_properties, purge_props=False)
 
-    def find_resources(self, query_string, auth_token, endpoint_id=None,
-                       **kwargs):
+    def find_resources(self, query_string, auth_token,
+                       endpoint_id=None, **kwargs):
         """Find resources matching the query
-        :param query_string: query expression
+        :param query_string: query expression. Include resource type(s)
         :param auth_token: keystone auth_token of request user
         :param endpoint_id: id for locating the cloud resource provider
         :param **kwargs: Include additional info required by the driver,
         :returns list of resources
         """
-        #TODO(Lakshmi): Implement this method
-        pass
+        resource_list = dict()
+        if not query_string:
+            glance_client = self.__get_glance_client(endpoint_id, auth_token)
+            images = glance_client.images.list()
+            for image in list(images):
+                resource = self.transform_image_to_resource(
+                    self.default_resource_type,
+                    image
+                )
+                resource_list[resource.id] = resource
 
-    def create_resource(self, resource, auth_token, endpoint_id=None,
-                        **kwargs):
+        return resource_list
+
+    def create_resource(self, resource_type, resource, auth_token,
+                        endpoint_id=None, **kwargs):
         """Create resource
+        :param resource_type: resource_type set for this call
         :param resource: resource detail
         :param auth_token: keystone auth_token of request user
         :param endpoint_id: id for locating the cloud resource provider
@@ -136,9 +129,10 @@ class GlanceResourceDriver(base.ResourceInterface):
         """
         raise exception.MethodNotSupported(method="create_resource")
 
-    def delete_resource(self, resource_id, auth_token, endpoint_id=None,
-                        **kwargs):
+    def delete_resource(self, resource_type, resource_id, auth_token,
+                        endpoint_id=None, **kwargs):
         """Delete resource
+        :param resource_type: resource_type set for this call
         :param resource_id: unique resource identifier
         :param auth_token: keystone auth_token of request user
         :param endpoint_id: id for locating the cloud resource provider
@@ -155,17 +149,75 @@ class GlanceResourceDriver(base.ResourceInterface):
         )
 
         glance_public_url = None
-        for entry in keystone.service_catalog.catalog.get('serviceCatalog'):
-            for endpoint in entry['endpoints']:
-                if endpoint['id'] == endpoint_id:
-                    glance_public_url = endpoint['publicURL']
+        if endpoint_id:
+            for entry in keystone.service_catalog.catalog.get(
+                    'serviceCatalog'):
+                for endpoint in entry['endpoints']:
+                    if endpoint['id'] == endpoint_id:
+                        glance_public_url = endpoint['publicURL']
+                        break
+                if glance_public_url:
                     break
-            if glance_public_url:
-                break
-
+        else:
+            glance_public_url = keystone.service_catalog.url_for(
+                service_type=self.service_type,
+                endpoint_type=self.endpoint_type
+            )
         glance_client = Client(
             '1',
             endpoint=glance_public_url,
             token=auth_token
         )
         return glance_client
+
+    def transform_image_to_resource(self, resource_type, image):
+        glance_image_properties = image.properties
+        image_resource = Resource()
+        image_capabilities = []
+        image_resource.capabilities = image_capabilities
+
+        image_resource.id = image.id
+        image_resource.type = resource_type
+        image_resource.name = image.name
+
+        for key in glance_image_properties:
+            if key.count(self.separator) == 2:
+                (namespace, capability_type, prop_name) = key.split(".")
+                namespace = self.replace_hash_from_name(namespace)
+                capability_type = self.replace_hash_from_name(capability_type)
+                prop_name = self.replace_hash_from_name(prop_name)
+            else:
+                namespace = self.default_namespace
+                capability_type = self.default_capability_type
+                prop_name = key
+
+            image_property = Property()
+            image_property.name = prop_name
+            image_property.value = glance_image_properties[key]
+
+            image_capability = None
+            for capability in image_resource.capabilities:
+                if capability.capability_type_namespace == namespace and \
+                        capability.capability_type == capability_type:
+                    image_capability = capability
+
+            if not image_capability:
+                image_capability = Capability()
+                image_capability.properties = []
+                image_resource.capabilities.append(image_capability)
+
+            image_capability.capability_type_namespace = namespace
+            image_capability.capability_type = capability_type
+            image_capability.properties.append(image_property)
+
+        return image_resource
+
+    def replace_colon_from_name(self, name):
+        if name:
+            return name.replace(':', '#')
+        return
+
+    def replace_hash_from_name(self, name):
+        if name:
+            return name.replace('#', ':')
+        return

@@ -50,9 +50,10 @@ class BaseDriver(object):
 class ResourceInterface(object):
 
     @abc.abstractmethod
-    def get_resource(self, resource_id, auth_token, endpoint_id=None,
-                     **kwargs):
+    def get_resource(self, resource_type, resource_id, auth_token,
+                     endpoint_id=None, **kwargs):
         """Retrieve the resource detail
+        :param resource_type: resource_type set for this call
         :param resource_id: unique resource identifier
         :param auth_token: keystone auth_token of request user
         :param endpoint_id: id for locating the cloud resource provider
@@ -61,8 +62,8 @@ class ResourceInterface(object):
         """
 
     @abc.abstractmethod
-    def find_resources(self, query_string, auth_token, endpoint_id=None,
-                       **kwargs):
+    def find_resources(self, query_string, auth_token,
+                       endpoint_id=None, **kwargs):
         """Find resources matching the query
         :param query_string: query expression
         :param auth_token: keystone auth_token of request user
@@ -72,9 +73,10 @@ class ResourceInterface(object):
         """
 
     @abc.abstractmethod
-    def create_resource(self, resource, auth_token, endpoint_id=None,
-                        **kwargs):
+    def create_resource(self, resource_type, resource, auth_token,
+                        endpoint_id=None, **kwargs):
         """Create resource
+        :param resource_type: resource_type set for this call
         :param resource: resource detail
         :param auth_token: keystone auth_token of request user
         :param endpoint_id: id for locating the cloud resource provider
@@ -82,9 +84,10 @@ class ResourceInterface(object):
         """
 
     @abc.abstractmethod
-    def update_resource(self, resource_id, resource, auth_token,
-                        endpoint_id=None, **kwargs):
+    def update_resource(self, resource_type, resource_id, resource,
+                        auth_token, endpoint_id=None, **kwargs):
         """Update resource
+        :param resource_type: resource_type set for this call
         :param resource_id: unique resource identifier
         :param resource: resource detail
         :param auth_token: keystone auth_token of request user
@@ -93,9 +96,10 @@ class ResourceInterface(object):
         """
 
     @abc.abstractmethod
-    def delete_resource(self, resource_id, auth_token, endpoint_id=None,
-                        **kwargs):
+    def delete_resource(self, resource_type, resource_id, auth_token,
+                        endpoint_id=None, **kwargs):
         """Delete resource
+        :param resource_type: resource_type set for this call
         :param resource_id: unique resource identifier
         :param auth_token: keystone auth_token of request user
         :param endpoint_id: id for locating the cloud resource provider

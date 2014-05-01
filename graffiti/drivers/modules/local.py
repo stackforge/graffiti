@@ -29,9 +29,10 @@ class LocalResourceDriver(base.ResourceInterface):
 
         self._resource_dao = ResourceDAOFactory.create(persistence_type)
 
-    def get_resource(self, resource_id, auth_token, endpoint_id=None,
-                     **kwargs):
+    def get_resource(self, resource_type, resource_id, auth_token,
+                     endpoint_id=None, **kwargs):
         """Retrieve the resource detail
+        :param resource_type: resource_type set for this call
         :param resource_id: unique resource identifier
         :param auth_token: keystone auth_token of request user
         :param endpoint_id: id for locating the cloud resource provider
@@ -42,10 +43,10 @@ class LocalResourceDriver(base.ResourceInterface):
         res = self._resource_dao.get_resource(resource_id)
         return res
 
-    def find_resources(self, query_string, auth_token, endpoint_id=None,
-                       **kwargs):
+    def find_resources(self, query_string, auth_token,
+                       endpoint_id=None, **kwargs):
         """Find resources matching the query
-        :param query_string: query expression
+        :param query_string: query expression. Include resource type(s)
         :param auth_token: keystone auth_token of request user
         :param endpoint_id: id for locating the cloud resource provider
         :param **kwargs: Include additional info required by the driver,
@@ -57,9 +58,10 @@ class LocalResourceDriver(base.ResourceInterface):
 
         return []
 
-    def create_resource(self, resource, auth_token, endpoint_id=None,
-                        **kwargs):
+    def create_resource(self, resource_type, resource, auth_token,
+                        endpoint_id=None, **kwargs):
         """Create resource
+        :param resource_type: resource_type set for this call
         :param resource: resource detail
         :param auth_token: keystone auth_token of request user
         :param endpoint_id: id for locating the cloud resource provider
@@ -71,9 +73,10 @@ class LocalResourceDriver(base.ResourceInterface):
 
         return resource
 
-    def update_resource(self, resource_id, resource, auth_token,
-                        endpoint_id=None, **kwargs):
+    def update_resource(self, resource_type, resource_id, resource,
+                        auth_token, endpoint_id=None, **kwargs):
         """Update resource
+        :param resource_type: resource_type set for this call
         :param resource_id: unique resource identifier
         :param resource: resource detail
         :param auth_token: keystone auth_token of request user
@@ -86,9 +89,10 @@ class LocalResourceDriver(base.ResourceInterface):
         )
         return resource
 
-    def delete_resource(self, resource_id, auth_token, endpoint_id=None,
-                        **kwargs):
+    def delete_resource(self, resource_type, resource_id, auth_token,
+                        endpoint_id=None, **kwargs):
         """Delete resource
+        :param resource_type: resource_type set for this call
         :param resource_id: unique resource identifier
         :param auth_token: keystone auth_token of request user
         :param endpoint_id: id for locating the cloud resource provider
