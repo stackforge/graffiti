@@ -10,38 +10,26 @@
         {
             "capability_type": "StandardCapability1",
             "capability_type_namespace": "TEST:RESOURCE:2014-1",
-            "properties": [
+            "properties":
             {
-                "name": "StandardCapabilityProperty1",
-                "value": "SCP1"
-            },
-            {
-                "name": "StandardCapabilityProperty2",
-                "value": "SCP2"
-            }]
+                "StandardCapabilityProperty1": "SCP1",
+                "StandardCapabilityProperty2": "SCP2"
+            }
         },
         {
             "capability_type": "StandardCapability2",
             "capability_type_namespace": "TEST:RESOURCE:2014-1",
-            "properties": [
+            "properties":
             {
-                "name": "StandardCapabilityProperty3",
-                "value": "SCP3"
-            },
-            {
-                "name": "StandardCapabilityProperty4",
-                "value": "SCP4"
-            }]
+                "StandardCapabilityProperty3": "SCP3",
+                "StandardCapabilityProperty4": "SCP4"
+            }
         }],
-        "properties": [
+        "properties":
         {
-            "name": "StandardResourceProperty1",
-            "value": "SRP1"
+            "StandardResourceProperty1": "SRP1",
+            "StandardResourceProperty2": "SRP2"
         },
-        {
-            "name": "StandardResourceProperty2",
-            "value": "SRP2"
-        }],
         "requirements": [
         {
             "capability_type": "StandardRequirement1",

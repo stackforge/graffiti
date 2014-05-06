@@ -16,11 +16,9 @@
 import wsme
 from wsme import types
 
-from graffiti.api.model.v1.property import Property
-
 
 class Capability(types.Base):
-    properties = wsme.wsattr([Property], mandatory=True)
+    properties = wsme.wsattr({types.text: types.text}, mandatory=True)
     capability_type = wsme.wsattr(types.text, mandatory=True)
     capability_type_namespace = wsme.wsattr(types.text, mandatory=True)
 

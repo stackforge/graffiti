@@ -17,7 +17,6 @@ import wsme
 from wsme import types
 
 from graffiti.api.model.v1.capability import Capability
-from graffiti.api.model.v1.property import Property
 from graffiti.api.model.v1.provider import Provider
 from graffiti.api.model.v1.requirement import Requirement
 
@@ -28,7 +27,7 @@ class Resource(types.Base):
     name = wsme.wsattr(types.text, mandatory=True)
     description = wsme.wsattr(types.text, mandatory=False)
     provider = wsme.wsattr(Provider, mandatory=True)
-    properties = wsme.wsattr([Property], mandatory=False)
+    properties = wsme.wsattr({types.text: types.text}, mandatory=False)
     capabilities = wsme.wsattr([Capability], mandatory=True)
     requirements = wsme.wsattr([Requirement], mandatory=True)
 
