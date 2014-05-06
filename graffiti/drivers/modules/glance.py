@@ -32,9 +32,8 @@ class GlanceResourceDriver(base.ResourceInterface):
         self.separator = "."
         self.service_type = 'image'
         self.endpoint_type = 'publicURL'
-        self.default_namespace = "Default"
-        self.default_capability_type = "Default"
-        self.default_resource_type = "OS::Glance::Image"
+        self.default_namespace_postfix = "::Default"
+        self.unknown_properties_type = "AdditionalProperties"
 
     def get_resource(self, resource_type, resource_id, auth_token,
                      endpoint_id=None, **kwargs):
@@ -77,21 +76,29 @@ class GlanceResourceDriver(base.ResourceInterface):
 
         image_properties = {}
         for capability in resource.capabilities:
-            properties = capability.properties
-            capability_type = self.replace_colon_from_name(
-                capability.capability_type
-            )
-            capability_type_namespace = self.replace_colon_from_name(
-                capability.capability_type_namespace
-            )
+            if capability.capability_type_namespace \
+                == resource_type + self.default_namespace_postfix \
+                and capability.capability_type \
+                == self.unknown_properties_type:
+                # For unknown properties, just directly set property name.
+                for property in capability.properties:
+                    image_properties[property.name] = property.value
+            else:
+                properties = capability.properties
+                capability_type = self.replace_colon_from_name(
+                    capability.capability_type
+                )
+                capability_type_namespace = self.replace_colon_from_name(
+                    capability.capability_type_namespace
+                )
 
-            for property in properties:
-                prop_name = capability_type_namespace + \
-                    self.separator + \
-                    capability_type + \
-                    self.separator + \
-                    self.replace_colon_from_name(property.name)
-                image_properties[prop_name] = property.value
+                for property in properties:
+                    prop_name = capability_type_namespace + \
+                        self.separator + \
+                        capability_type + \
+                        self.separator + \
+                        self.replace_colon_from_name(property.name)
+                    image_properties[prop_name] = property.value
 
         image = glance_client.images.get(resource.id)
         image.update(properties=image_properties, purge_props=False)
@@ -187,8 +194,8 @@ class GlanceResourceDriver(base.ResourceInterface):
                 capability_type = self.replace_hash_from_name(capability_type)
                 prop_name = self.replace_hash_from_name(prop_name)
             else:
-                namespace = self.default_namespace
-                capability_type = self.default_capability_type
+                namespace = resource_type + self.default_namespace_postfix
+                capability_type = self.unknown_properties_type
                 prop_name = key
 
             image_property = Property()
