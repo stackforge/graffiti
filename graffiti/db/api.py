@@ -16,6 +16,7 @@
 # import copy
 from oslo.config import cfg
 
+from graffiti.api.model.v1.derived_type import DerivedType
 from graffiti.common import exception as exc
 from graffiti.db import models
 from graffiti.openstack.common.db import exception as db_exc
@@ -190,6 +191,41 @@ def namespace_delete(name):
 def capability_type_get(name, namespace):
     query = model_query(models.CapabilityType, get_session())
     return query.filter_by(name=name, namespace=namespace).first()
+
+
+def capability_type_get_with_derived_properties(name, namespace):
+    cap_type_prop_dict = dict()
+    db_capability_type = capability_type_get(name, namespace)
+    if db_capability_type.parent_name and db_capability_type.parent_namespace:
+        property_dict = dict()
+        property_dict = __get_derived_properties(
+            db_capability_type.parent_name,
+            db_capability_type.parent_namespace,
+            property_dict
+        )
+        cap_type_prop_dict['derived_properties'] = property_dict
+
+    cap_type_prop_dict['cap_type'] = db_capability_type
+    return cap_type_prop_dict
+
+
+def __get_derived_properties(name, namespace, property_dict):
+    db_capability_type = capability_type_get(name, namespace)
+    properties_text = db_capability_type.properties_text
+    if properties_text:
+        derived_type = DerivedType()
+        derived_type.name = name
+        derived_type.namespace = namespace
+        property_dict[derived_type] = properties_text
+
+    if db_capability_type.parent_name and db_capability_type.parent_namespace:
+        __get_derived_properties(
+            db_capability_type.parent_name,
+            db_capability_type.parent_namespace,
+            property_dict
+        )
+
+    return property_dict
 
 
 def capability_type_get_all():

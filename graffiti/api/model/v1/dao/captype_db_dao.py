@@ -14,9 +14,13 @@
 # limitations under the License.
 
 from graffiti.api.model.v1.capability_type import CapabilityType
+from graffiti.api.model.v1.capability_type_derived_prop import \
+    CapabilityTypeDerivedProperties
 from graffiti.api.model.v1.dao.captype_dao import CapabilityTypeDAOBase
+from graffiti.api.model.v1.derived_property_type import DerivedPropertyType
 from graffiti.api.model.v1.derived_type import DerivedType
 from graffiti.api.model.v1.property_type import PropertyType
+
 from graffiti.db import api as dbapi
 import json
 from wsme.rest.json import fromjson
@@ -49,6 +53,40 @@ class DBCapabilityTypeDAO(CapabilityTypeDAOBase):
 
         return model_captype
 
+    def _to_model_derived(self, db_captype, derived_props):
+        model_captype = CapabilityTypeDerivedProperties.to_model(db_captype)
+
+        if db_captype.parent_name == 'null':
+            model_captype.derived_from = None
+        else:
+            model_captype.derived_from = DerivedType(
+                name=db_captype.parent_name,
+                namespace=db_captype.parent_namespace)
+
+        property_types = {}
+        db_properties = json.loads(db_captype.properties_text)
+        for id in db_properties:
+            property_types[id] = fromjson(PropertyType, db_properties[id])
+        model_captype.properties = property_types
+
+        if derived_props:
+            derived_property_types = {}
+            for key in derived_props:
+                props = derived_props[key]
+                db_properties = json.loads(props)
+                for id in db_properties:
+                    derived_props_model = fromjson(
+                        DerivedPropertyType,
+                        db_properties[id])
+                    derived_props_model.derived_from_capability_namespace =\
+                        key.namespace
+                    derived_props_model.derived_from_capability_name = key.name
+                    derived_property_types[id] = derived_props_model
+
+            model_captype.derived_properties = derived_property_types
+
+        return model_captype
+
     def _to_dict(self, model_captype):
         captype_dict = model_captype.to_dict()
 
@@ -76,6 +114,23 @@ class DBCapabilityTypeDAO(CapabilityTypeDAOBase):
             return res
 
         return self._to_model(db_capability_type)
+
+    def get_capability_type_with_derived_properties(self, name, namespace):
+        cap_type_prop_dict = dbapi.capability_type_get_with_derived_properties(
+            name,
+            namespace)
+        db_capability_type = cap_type_prop_dict['cap_type']
+
+        derived_props = None
+        if 'derived_properties' in cap_type_prop_dict.keys():
+            derived_props = cap_type_prop_dict['derived_properties']
+
+        if not db_capability_type:
+            res = CapabilityType(CapabilityType(), status_code=404,
+                                 error="CapabilityType Not Found")
+            return res
+
+        return self._to_model_derived(db_capability_type, derived_props)
 
     def find_capability_types(self, query_string):
         # TODO(wko): add support for query_string
