@@ -113,6 +113,8 @@ class ResourceController(RestController):
         else:
             if not resource_type:
                 resource_types.append(self.default_resource_type)
+            else:
+                resource_types.append(resource_type)
 
         driver_resources = ResourceController.__group_resource_types_by_driver(
             driver_factory.get_resource_types(),

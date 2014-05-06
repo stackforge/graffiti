@@ -4,6 +4,7 @@ pecan>=0.4.4
 WSME>=0.6
 oslo.config>=1.2.0
 python-glanceclient
+python-novaclient
 alembic>=0.4.1
 iso8601>=0.1.8
 requests>=1.1
