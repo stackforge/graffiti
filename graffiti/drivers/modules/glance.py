@@ -81,8 +81,9 @@ class GlanceResourceDriver(base.ResourceInterface):
                 and capability.capability_type \
                 == self.unknown_properties_type:
                 # For unknown properties, just directly set property name.
-                for property in capability.properties:
-                    image_properties[property.name] = property.value
+                for property_name, property_value in \
+                        capability.properties.iteritems():
+                    image_properties[property_name] = property_value
             else:
                 properties = capability.properties
                 capability_type = self.replace_colon_from_name(
@@ -92,13 +93,13 @@ class GlanceResourceDriver(base.ResourceInterface):
                     capability.capability_type_namespace
                 )
 
-                for property in properties:
+                for property_name, property_value in properties.iteritems():
                     prop_name = capability_type_namespace + \
                         self.separator + \
                         capability_type + \
                         self.separator + \
-                        self.replace_colon_from_name(property.name)
-                    image_properties[prop_name] = property.value
+                        self.replace_colon_from_name(property_name)
+                    image_properties[prop_name] = property_value
 
         image = glance_client.images.get(resource.id)
         image.update(properties=image_properties, purge_props=False)
@@ -210,12 +211,13 @@ class GlanceResourceDriver(base.ResourceInterface):
 
             if not image_capability:
                 image_capability = Capability()
-                image_capability.properties = []
+                image_capability.properties = {}
                 image_resource.capabilities.append(image_capability)
 
             image_capability.capability_type_namespace = namespace
             image_capability.capability_type = capability_type
-            image_capability.properties.append(image_property)
+            image_capability.properties[image_property.name] = \
+                image_property.value
 
         return image_resource
 
