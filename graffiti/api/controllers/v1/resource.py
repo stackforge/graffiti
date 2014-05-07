@@ -13,15 +13,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
+
 import pecan
 from pecan.rest import RestController
 
 
 from wsme.api import Response
+from wsme.rest.json import fromjson
 from wsmeext.pecan import wsexpose
 
+
 from graffiti.api.model.v1.resource import Resource
+from graffiti.api.model.v1.resource_query import ResourceQuery
 from graffiti.common import driver_factory
+from graffiti.common.exception import DriverNotFound
+from graffiti.common.exception import DriverNotFoundForResourceType
 
 import six
 
@@ -94,25 +101,50 @@ class ResourceController(RestController):
 
     @wsexpose([Resource], six.text_type, six.text_type)
     def get_all(self, resource_type=None, query_string=None):
+        print "args: resource_type=%s, query_string=%s" % \
+              (resource_type, query_string)
         auth_token = pecan.request.headers.get('X-Auth-Token')
 
-        if not resource_type:
-            resource_type = self.default_resource_type
-
-        driver = driver_factory.get_driver(resource_type)
-        if driver.resource:
-            res_list = driver.resource.find_resources(
-                query_string,
-                auth_token
-            )
-            if res_list:
-                return res_list.itervalues()
+        resource_types = []
+        if query_string:
+            doc = json.loads(query_string)
+            resource_query = fromjson(ResourceQuery, doc)
+            resource_types = resource_query.resource_types
         else:
-            resource = Response(
-                Resource(),
-                status_code=404,
-                error="Driver not found for the resource type")
-            return resource
+            if not resource_type:
+                resource_types.append(self.default_resource_type)
+
+        driver_resources = ResourceController.__group_resource_types_by_driver(
+            driver_factory.get_resource_types(),
+            resource_types
+        )
+
+        all_resource_list = []
+        for driver_name in driver_resources.keys():
+            req_resource_types = driver_resources[driver_name]
+            resource_query = ResourceQuery()
+            resource_query.resource_types = req_resource_types
+            try:
+                print "Invoking driver(%s) for resource types(%s):" % \
+                      (driver_name, req_resource_types)
+                driver = driver_factory.get_driver_by_name(driver_name)
+            except DriverNotFound:
+                resource = Response(
+                    Resource(),
+                    status_code=404,
+                    error="Driver not found for the resource type")
+                return resource
+
+            if driver.resource:
+                res_list = driver.resource.find_resources(
+                    resource_query,
+                    auth_token
+                )
+                if res_list:
+                    all_resource_list += res_list.values()
+
+        if all_resource_list:
+            return all_resource_list
 
         return []
 
@@ -166,3 +198,30 @@ class ResourceController(RestController):
             )
 
         return resource
+
+    @staticmethod
+    def __group_resource_types_by_driver(
+            all_resource_types,
+            request_resource_types):
+        driver_resource_types = dict()
+        for resource_type in request_resource_types:
+
+            if resource_type in all_resource_types.keys():
+                driver_name = all_resource_types[resource_type]
+            else:
+                raise DriverNotFoundForResourceType(
+                    resource_type=resource_type
+                )
+
+            resource_list = []
+            if driver_name in driver_resource_types.keys():
+                resource_list = driver_resource_types[driver_name]
+                if not resource_list:
+                    resource_list = []
+                resource_list.append(resource_type)
+                driver_resource_types[driver_name] = resource_list
+            else:
+                resource_list.append(resource_type)
+                driver_resource_types[driver_name] = resource_list
+
+        return driver_resource_types

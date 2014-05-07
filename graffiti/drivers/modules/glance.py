@@ -103,17 +103,17 @@ class GlanceResourceDriver(base.ResourceInterface):
         image = glance_client.images.get(resource.id)
         image.update(properties=image_properties, purge_props=False)
 
-    def find_resources(self, query_string, auth_token,
+    def find_resources(self, resource_query, auth_token,
                        endpoint_id=None, **kwargs):
         """Find resources matching the query
-        :param query_string: query expression. Include resource type(s)
+        :param resource_query: query object. Includes resource type(s)
         :param auth_token: keystone auth_token of request user
         :param endpoint_id: id for locating the cloud resource provider
         :param **kwargs: Include additional info required by the driver,
         :returns list of resources
         """
         resource_list = dict()
-        if not query_string:
+        if resource_query:
             glance_client = self.__get_glance_client(endpoint_id, auth_token)
             images = glance_client.images.list()
             for image in list(images):

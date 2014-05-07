@@ -13,28 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import wsme
+from wsme import types
 
-from graffiti.api.model.v1.dao.resource_dao import ResourceDAOBase
 
+class ResourceQuery(types.Base):
+    resource_types = wsme.wsattr([types.text], mandatory=False)
 
-#TODO(Lakshmi): Implement db persistence for resource
-class DBResourceDAO(ResourceDAOBase):
+    #_wsme_attr_order = ('resource_types')
 
     def __init__(self, **kwargs):
-        super(DBResourceDAO, self).__init__(**kwargs)
-        self._type = "DBResourceDAO"
-
-    def get_type(self):
-        return self._type
-
-    def get_resource(self, id):
-        pass
-
-    def find_resources(self, resource_query):
-        pass
-
-    def set_resource(self, id=None, resource_definition=None):
-        pass
-
-    def delete_resource(self, id):
-        pass
+        super(ResourceQuery, self).__init__(**kwargs)

@@ -62,10 +62,10 @@ class ResourceInterface(object):
         """
 
     @abc.abstractmethod
-    def find_resources(self, query_string, auth_token,
+    def find_resources(self, resource_query, auth_token,
                        endpoint_id=None, **kwargs):
         """Find resources matching the query
-        :param query_string: query expression
+        :param resource_query: query object
         :param auth_token: keystone auth_token of request user
         :param endpoint_id: id for locating the cloud resource provider
         :param **kwargs: Include additional info required by the driver,

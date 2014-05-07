@@ -43,16 +43,16 @@ class LocalResourceDriver(base.ResourceInterface):
         res = self._resource_dao.get_resource(resource_id)
         return res
 
-    def find_resources(self, query_string, auth_token,
+    def find_resources(self, resource_query, auth_token,
                        endpoint_id=None, **kwargs):
         """Find resources matching the query
-        :param query_string: query expression. Include resource type(s)
+        :param resource_query: query object. Includes resource type(s)
         :param auth_token: keystone auth_token of request user
         :param endpoint_id: id for locating the cloud resource provider
         :param **kwargs: Include additional info required by the driver,
         :returns list of resources
         """
-        res_list = self._resource_dao.find_resources(query_string)
+        res_list = self._resource_dao.find_resources(resource_query)
         if res_list:
             return res_list
 

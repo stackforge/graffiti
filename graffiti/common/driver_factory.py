@@ -63,6 +63,36 @@ def get_driver(resource_type):
         raise exception.DriverNotFound(driver_name=driver_name)
 
 
+def get_driver_by_name(driver_name):
+    """Simple method to get a ref to an instance of a driver by the
+    name.
+
+    Driver loading is handled by the DriverFactory class. This method
+    conveniently wraps that class and returns the actual driver object.
+
+    :param driver_name: name of the registered driver
+    :returns: An instance of a class which implements
+              graffiti.drivers.base.BaseResourceDriver
+    :raises: DriverNotFound if the requested driver_name could not be
+             found in the "graffiti.drivers" namespace.
+
+    """
+
+    try:
+        factory = DriverFactory()
+        return factory[driver_name].obj
+    except KeyError:
+        raise exception.DriverNotFound(driver_name=driver_name)
+
+
+def get_resource_types():
+    """Returns a dictionary of resource type and driver name
+    :returns:dictionary with resource type as key and driver name
+            as its value
+    """
+    return DriverFactory()._resource_types
+
+
 class DriverFactory(object):
     """Discover, load and manage the drivers available."""
 
