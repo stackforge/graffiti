@@ -39,8 +39,8 @@ def setup_app(config):
                 stdoutToServer=True,
                 stderrToServer=True,
                 suspend=False)
-        except Exception as e:
-            print "Debug Connection Error:", e
+        except BaseException as be:
+            print "Debug Connection Error (Ignoring): %s" % be
 
     model.init_model()
     app_conf = dict(config.app)
