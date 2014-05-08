@@ -114,16 +114,20 @@ class GlanceResourceDriver(base.ResourceInterface):
         :returns list of resources
         """
         resource_list = dict()
+        #TODO(Lakshmi): Filter based on resource type for snapshot etc
         if resource_query:
-            glance_client = self.__get_glance_client(endpoint_id, auth_token)
-            images = glance_client.images.list()
-            for image in list(images):
-                resource = self.transform_image_to_resource(
-                    self.default_resource_type,
-                    image
+            for resource_type in resource_query.resource_types:
+                glance_client = self.__get_glance_client(
+                    endpoint_id,
+                    auth_token
                 )
-                resource_list[resource.id] = resource
-
+                images = glance_client.images.list()
+                for image in list(images):
+                    resource = self.transform_image_to_resource(
+                        resource_type,
+                        image
+                    )
+                    resource_list[resource.id] = resource
         return resource_list
 
     def create_resource(self, resource_type, resource, auth_token,
