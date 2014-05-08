@@ -22,7 +22,7 @@ from stevedore import dispatch
 
 driver_opts = [
     cfg.ListOpt('enabled_drivers',
-                default=['local', 'glance', 'nova'],
+                default=['local', 'glance', 'nova', 'cinder'],
                 help='List of drivers to enable. Missing drivers, or '
                      'drivers which can not be loaded will be '
                      'treated as a fatal exception.'),
