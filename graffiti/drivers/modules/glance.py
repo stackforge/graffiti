@@ -109,7 +109,7 @@ class GlanceResourceDriver(base.ResourceInterface):
                     image_properties[tag_name] = utils.TAG_IDENTIFIER
 
         image = glance_client.images.get(resource.id)
-        image.update(properties=image_properties, purge_props=False)
+        image.update(properties=image_properties, purge_props=True)
 
     def find_resources(self, resource_query, auth_token,
                        endpoint_id=None, **kwargs):
@@ -121,17 +121,24 @@ class GlanceResourceDriver(base.ResourceInterface):
         :returns list of resources
         """
         resource_list = dict()
-        #TODO(Lakshmi): Filter based on resource type for snapshot etc
         if resource_query:
-            for resource_type in resource_query.resource_types:
-                glance_client = self.__get_glance_client(
-                    endpoint_id,
-                    auth_token
-                )
-                images = glance_client.images.list()
-                for image in list(images):
+            glance_client = self.__get_glance_client(
+                endpoint_id,
+                auth_token
+            )
+            images = glance_client.images.list()
+            for image in list(images):
+                #Filter based on requested resource types
+                glance_image_properties = image.properties
+                image_type = "OS::Glance::Image"
+                if "image_type" in glance_image_properties.keys():
+                    image_type = glance_image_properties['image_type']
+                    if image_type and image_type.lower() == "snapshot":
+                        image_type = "OS::Glance::Snapshot"
+
+                if image_type in resource_query.resource_types:
                     resource = self.transform_image_to_resource(
-                        resource_type,
+                        image_type,
                         image
                     )
                     resource_list[resource.id] = resource

@@ -23,7 +23,7 @@ class GlanceResourceDriver(base.BaseDriver):
 
     def __init__(self):
         self.resource = glance.GlanceResourceDriver()
-        self.resource_types = ["OS::Glance::Image"]
+        self.resource_types = ["OS::Glance::Image", "OS::Glance::Snapshot"]
 
     def get_resource_types(self):
         """Returns the resource types supported by the implementing driver
