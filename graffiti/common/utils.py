@@ -101,11 +101,11 @@ def load_capability_type(cap_type_file):
                 property_dict = __namespace_dict[derived_type.namespace]
 
             for key in key_names:
-                property_dict[key] = derived_type
+                property_dict[key.lower()] = derived_type
 
             #Add capability itself as property - behaves as a TAG
             tag_name = cap_type['name'] + TAG_IDENTIFIER
-            property_dict[tag_name] = derived_type
+            property_dict[tag_name.lower()] = derived_type
 
             __namespace_dict[derived_type.namespace] = property_dict
 
@@ -120,10 +120,10 @@ def get_namespace_property_format_dict():
 
 def get_qualifier(property_name, property_value):
     if property_value:
-        key1 = property_name + property_value
-        key2 = property_name
+        key1 = property_name.lower() + property_value.lower()
+        key2 = property_name.lower()
     else:
-        key1 = property_name
+        key1 = property_name.lower()
 
     #First loop. Make sure key1 is not found anywhere
     for namespace in __namespace_dict.keys():
