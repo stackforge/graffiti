@@ -18,6 +18,7 @@ from graffiti.api.model.v1.capability import Capability
 from graffiti.api.model.v1.property import Property
 from graffiti.api.model.v1.resource import Resource
 from graffiti.common import exception
+from graffiti.common import utils
 from graffiti.drivers import base
 
 import keystoneclient.v2_0.client as ksclient
@@ -86,20 +87,26 @@ class GlanceResourceDriver(base.ResourceInterface):
                     image_properties[property_name] = property_value
             else:
                 properties = capability.properties
-                capability_type = self.replace_colon_from_name(
-                    capability.capability_type
-                )
-                capability_type_namespace = self.replace_colon_from_name(
-                    capability.capability_type_namespace
-                )
+                #capability_type = self.replace_colon_from_name(
+                #    capability.capability_type
+                #)
+                #capability_type_namespace = self.replace_colon_from_name(
+                #    capability.capability_type_namespace
+                #)
 
                 for property_name, property_value in properties.iteritems():
-                    prop_name = capability_type_namespace + \
-                        self.separator + \
-                        capability_type + \
-                        self.separator + \
-                        self.replace_colon_from_name(property_name)
+                    #prop_name = capability_type_namespace + \
+                    #    self.separator + \
+                    #    capability_type + \
+                    #    self.separator + \
+                    #    self.replace_colon_from_name(property_name)
+                    prop_name = self.replace_colon_from_name(property_name)
                     image_properties[prop_name] = property_value
+
+                # if capability doesnt have properties add capability as TAG
+                if not properties:
+                    tag_name = capability.capability_type
+                    image_properties[tag_name] = utils.TAG_IDENTIFIER
 
         image = glance_client.images.get(resource.id)
         image.update(properties=image_properties, purge_props=False)
@@ -199,9 +206,20 @@ class GlanceResourceDriver(base.ResourceInterface):
                 capability_type = self.replace_hash_from_name(capability_type)
                 prop_name = self.replace_hash_from_name(prop_name)
             else:
-                namespace = resource_type + self.default_namespace_postfix
-                capability_type = self.unknown_properties_type
                 prop_name = key
+                capability_type = None
+                namespace = None
+
+                cap_and_namespace = utils.get_qualifier(
+                    key,
+                    glance_image_properties[key]
+                )
+                if cap_and_namespace:
+                    capability_type = cap_and_namespace.name
+                    namespace = cap_and_namespace.namespace
+                else:
+                    namespace = resource_type + self.default_namespace_postfix
+                    capability_type = self.unknown_properties_type
 
             image_property = Property()
             image_property.name = prop_name

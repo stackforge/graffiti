@@ -1,0 +1,43 @@
+{ "capability_type_list" : 
+[
+  {
+    "name": "BIOSTXT",
+    "namespace": "TRUST",
+    "description": "BIOS Trusted Execution Technology",
+    "derived_from": {
+      "name": "Trusted",
+      "namespace": "TRUST"
+    },
+    "properties": {
+      "enabled": {
+        "type": "boolean",
+        "description": "",
+        "required": false,
+        "confidential": false
+      },
+      "verified": {
+        "type": "boolean",
+        "description": "",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "HypervisorTXT",
+    "namespace": "TRUST",
+    "description": "Hypervisor Trusted Execution Technology",
+    "derived_from": {
+      "name": "Trusted",
+      "namespace": "TRUST"
+    },
+    "properties": {}
+  },
+  {
+    "name": "Trusted",
+    "namespace": "TRUST",
+    "description": "",
+    "properties": {}
+  }
+] 
+}

@@ -1,0 +1,196 @@
+{ "capability_type_list" : 
+[
+  {
+    "name": "Apache",
+    "namespace": "SAMPLES",
+    "description": "The Apache HTTP Server Project is a collaborative software development effort aimed at creating a robust, commercial-grade, featureful, and freely-available source code implementation of an HTTP (Web) server. The project is jointly managed by a group of volunteers located around the world, using the Internet and the Web to communicate, plan, and develop the server and its related documentation. This project is part of the Apache Software Foundation. In addition, hundreds of users have contributed ideas, code, and documentation to the project. This file is intended to briefly describe the history of the Apache HTTP Server and recognize the many contributors.",
+    "derived_from": {
+      "name": "Software",
+      "namespace": "SAMPLES"
+    },
+    "properties": {}
+  },
+  {
+    "name": "Database",
+    "namespace": "SAMPLES",
+    "description": "Database management systems (DBMSs) are specially designed software applications that interact with the user, other applications, and the database itself to capture and analyze data. A general-purpose DBMS is a software system designed to allow the definition, creation, querying, update, and administration of databases.",
+    "derived_from": {
+      "name": "Software",
+      "namespace": "SAMPLES"
+    },
+    "properties": {
+      "listen_port": {
+        "type": "integer",
+        "description": "",
+        "required": false,
+        "confidential": false,
+        "minimum": 1,
+        "maximum": 65535
+      }
+    }
+  },
+  {
+    "name": "GPU",
+    "namespace": "SAMPLES",
+    "description": "",
+    "properties": {}
+  },
+  {
+    "name": "LAMP",
+    "namespace": "SAMPLES",
+    "description": "",
+    "derived_from": {
+      "name": "SoftwareStack",
+      "namespace": "SAMPLES"
+    },
+    "properties": {}
+  },
+  {
+    "name": "MediaWiki",
+    "namespace": "SAMPLES",
+    "description": "",
+    "derived_from": {
+      "name": "Software",
+      "namespace": "SAMPLES"
+    },
+    "properties": {}
+  },
+  {
+    "name": "MongoDB",
+    "namespace": "SAMPLES",
+    "description": "",
+    "derived_from": {
+      "name": "BigData",
+      "namespace": "APPLICATION::CATEGORIES"
+    },
+    "properties": {}
+  },
+  {
+    "name": "MySQL",
+    "namespace": "SAMPLES",
+    "description": "",
+    "derived_from": {
+      "name": "Database",
+      "namespace": "SAMPLES"
+    },
+    "properties": {}
+  },
+  {
+    "name": "php",
+    "namespace": "SAMPLES",
+    "description": "",
+    "derived_from": {
+      "name": "Runtime",
+      "namespace": "SAMPLES"
+    },
+    "properties": {}
+  },
+  {
+    "name": "PropertyTypesSamples",
+    "namespace": "SAMPLES",
+    "description": "Sample Description",
+    "properties": {
+      "Property1": {
+        "type": "string",
+        "description": "Property1 blah",
+        "defaultValue": "BLAh",
+        "required": true,
+        "confidential": true,
+        "minLength": 1,
+        "maxLength": 45,
+        "pattern": "[A-Z]{3}.*"
+      },
+      "Property2": {
+        "type": "integer",
+        "description": "Property2 blah",
+        "defaultValue": 4,
+        "required": false,
+        "confidential": false,
+        "minimum": 1,
+        "maximum": 6
+      },
+      "Property3": {
+        "type": "double",
+        "description": "Property3 blah",
+        "defaultValue": 4.5,
+        "required": false,
+        "confidential": false,
+        "minimum": 3,
+        "maximum": 7.64
+      },
+      "Property4": {
+        "type": "boolean",
+        "description": "Property4 blah",
+        "defaultValue": true,
+        "required": false,
+        "confidential": false
+      },
+      "Property5": {
+        "type": "choice",
+        "description": "Property5 blah",
+        "required": false,
+        "confidential": false,
+        "itemType": "string",
+        "items": [
+          "choice1",
+          "choice2",
+          "choice3"
+        ]
+      },
+      "Property6": {
+        "type": "date",
+        "description": "Property6 blah",
+        "required": true,
+        "confidential": false
+      },
+      "Property7": {
+        "type": "resource_id",
+        "description": "Property7 blah",
+        "required": false,
+        "confidential": false
+      },
+      "Property8": {
+        "type": "string",
+        "description": "Property8 blah",
+        "required": true,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "Runtime",
+    "namespace": "SAMPLES",
+    "description": "",
+    "derived_from": {
+      "name": "Software",
+      "namespace": "SAMPLES"
+    },
+    "properties": {}
+  },
+  {
+    "name": "Software",
+    "namespace": "SAMPLES",
+    "description": "",
+    "properties": {
+      "version": {
+        "type": "string",
+        "description": "",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "SoftwareStack",
+    "namespace": "SAMPLES",
+    "description": "",
+    "properties": {}
+  },
+  {
+    "name": "SSD",
+    "namespace": "SAMPLES",
+    "description": "SSD Drive",
+    "properties": {}
+  }
+] 
+}

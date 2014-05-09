@@ -1,0 +1,861 @@
+{ "capability_type_list" : 
+[
+  {
+    "name": "alpha",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "ArchLinux",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Arch Linux is a Linux-based operating system for i686 and x86-64 computers.It is composed predominantly of free and open source software, and supports community involvement.",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "arch",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "armv71",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "CENTOS",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Community Enterprise Operating System CentOS (abbreviated from Community Enterprise Operating System) is a Linux distribution that attempts to provide a free enterprise class computing platform which aims to be 100% binary compatible with its upstream source, Red Hat Enterprise Linux (RHEL).",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "centos",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "CPUArchitecture",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.  The ImagePropertiesFilter filters compute nodes that satisfy any architecture, hypervisor type, or virtual machine mode properties specified on the instance's image properties. Image properties are contained in the image dictionary in the request_spec.",
+    "properties": {}
+  },
+  {
+    "name": "cris",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "Debian",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Debian is an operating system composed of free software mostly carrying the GNU General Public License. The operating system is developed by an internet collaboration of volunteers aligned with The Debian Project. \n\nDebian systems can use either the Linux kernel (known as the Debian GNU/Linux distribution), the FreeBSD kernel (known as the Debian GNU/kFreeBSD distribution) or, more recently, the GNU Hurd kernel (more precisely, the GNU Mach microkernel and its servers; known as the Debian GNU/Hurd distribution).",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "debian",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "Fedora",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Fedora (formerly Fedora Core) is an operating system based on the Linux kernel, developed by the community-supported Fedora Project and owned by Red Hat. Fedora contains software distributed under a free and open source license and aims to be on the leading edge of such technologies.",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "fedora",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "FreeBSD",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "FreeBSD is a free Unix-like operating system descended from AT&T Unix via BSD. Although for legal reasons FreeBSD cannot be called \"Unix,\" it is a direct descendant from BSD, which was historically also called \"BSD Unix\" or \"Berkeley Unix.\"",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "freebsd",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "GentooLinux",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Gentoo Linux is a computer operating system based on the Linux kernel and built using the Portage package management system. It is distributed as free and open source software. Unlike a binary software distribution, the source code is compiled locally according to the user's preferences and is often optimized for the specific type of computer. Precompiled binaries are available for some very large packages and for packages whose source code has not been released.",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "gentoo",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "i686",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "ia64",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "lm32",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "m68k",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "MandrakeLinux",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Mandriva Linux (result of fusion of the French distribution Mandrakelinux or Mandrake Linux and the Brazilian distribution Conectiva Linux) is a Linux distribution distributed by Mandriva. It uses the RPM Package Manager.",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "mandrake",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "MandrivaEnterpriseServer",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Mandriva Linux (result of fusion of the French distribution Mandrakelinux or Mandrake Linux and the Brazilian distribution Conectiva Linux) is a Linux distribution distributed by Mandriva. It uses the RPM Package Manager.",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "mes",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "MandrivaLinux",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "mandriva",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "microblaze",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "microblazeel",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "mips",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "mips64",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "mips64el",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "mipsel",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "MS-DOS",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Microsoft Disc Operating System",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "msdos",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "NetBSD",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "NetBSD is an open-source Unix-like operating system descended from Berkeley Software Distribution (BSD), a Unix derivative developed at the University of California, Berkeley.",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "netbsd",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "OpenBSD",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "OpenBSD is a Unix-like computer operating system descended from Berkeley Software Distribution (BSD), a Unix derivative developed at the University of California, Berkeley.",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "openbsd",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "openrisc",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "OpenSolaris",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "OpenSolaris was an open source computer operating system based on Solaris created by Sun Microsystems. It was also the name of the project initiated by Sun to build a developer and user community around the software. After the acquisition of Sun Microsystems in 2010, Oracle decided to discontinue open development of the core software, and replaced the OpenSolaris distribution model with the proprietary Solaris Express.",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "opensolaris",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "OpenSUSE",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "openSUSE is a general purpose operating system built on top of the Linux kernel, developed by the community-supported openSUSE Project and sponsored by SUSE and a number of other companies.",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "opensuse",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "OperatingSystem",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "",
+    "properties": {
+      "os_version": {
+        "type": "string",
+        "description": "The operating system version as specified by the distributor (for example, 12.04).",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "parisc",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "parisc64",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "ppc",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "ppc64",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "ppcemb",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "RedHatEnterpriseLinux",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Red Hat Enterprise Linux (RHEL) is a Linux distribution developed by Red Hat and targeted toward the commercial market.",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "rhel",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "s390",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "s390x",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "sh4",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "sh4eb",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "sparc",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "sparc64",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "SUSELinuxEnterpriseDesktop",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "SUSE Linux Enterprise Desktop (SLED), formerly introduced as Novell Linux Desktop, is a Linux distribution supplied by SUSE and targeted at the business market. It is targeted for desktops.",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "sled",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "Ubuntu",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Ubuntu is a Debian-based Linux operating system.",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "ubuntu",
+        "required": false,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "unicore32",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  },
+  {
+    "name": "Windows",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "A series of graphical interface operating systems developed, marketed, and sold by Microsoft.",
+    "derived_from": {
+      "name": "OperatingSystem",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "os_distro": {
+        "type": "string",
+        "description": "The common name of the operating system distribution in lowercase (uses the same data vocabulary as the libosinfo project).",
+        "defaultValue": "windows",
+        "required": false,
+        "confidential": false,
+        "pattern": "windows"
+      }
+    }
+  },
+  {
+    "name": "x86_64",
+    "namespace": "OS::COMPUTE::GUEST",
+    "description": "Compute architecture. x86-64 (also known as x64, x86_64 and AMD64) is the 64-bit version of the x86 instruction set. It supports vastly larger amounts of virtual memory and physical memory than is possible on its predecessors, allowing programs to store larger amounts of data in memory. x86-64 also provides 64-bit general purpose registers and numerous other enhancements. The original specification was created by AMD, and has been implemented by AMD, Intel, VIA, and others. It is fully backwards compatible with 16-bit and 32-bit x86 code.",
+    "derived_from": {
+      "name": "CPUArchitecture",
+      "namespace": "OS::COMPUTE::GUEST"
+    },
+    "properties": {
+      "architecture": {
+        "type": "string",
+        "description": "The CPU architecture that must be supported by the hypervisor. For example, x86_64, arm, or ppc64. Run uname -m to get the architecture of a machine. We strongly recommend using the architecture data vocabulary defined by the libosinfo project for this purpose.",
+        "defaultValue": "x86_64",
+        "required": false,
+        "confidential": false,
+        "pattern": "x86_64"
+      }
+    }
+  }
+] 
+}

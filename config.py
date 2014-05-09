@@ -16,6 +16,7 @@
 from oslo.config import cfg
 
 from graffiti.common import driver_factory
+from graffiti.common import utils
 
 # Server Specific Configurations
 server = {
@@ -148,3 +149,6 @@ pydevd = {
 
 # Discover and load drivers
 df = driver_factory.DriverFactory()
+
+# Load Out of the box Dictionary
+utils.load_dictionary()

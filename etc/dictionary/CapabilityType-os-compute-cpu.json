@@ -1,0 +1,268 @@
+{ "capability_type_list" : 
+[
+  {
+    "name": "aes",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "CPU feature flag used in ComputeCapabilitiesFilter matching extra_spec (k,v) = ('capabilities : cpu_info : features', '<in> 'lahf_lm'')",
+    "derived_from": {
+      "name": "features",
+      "namespace": "OS::COMPUTE::CPU"
+    },
+    "properties": {
+      "features": {
+        "type": "string",
+        "description": "",
+        "defaultValue": "aes",
+        "required": true,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "AMD",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "CPU vendor name used in ComputeCapabilitiesFilter matching extra_spec (k,v) = ('capabilities : cpu_info : vendor', 'AMD')",
+    "derived_from": {
+      "name": "vendor",
+      "namespace": "OS::COMPUTE::CPU"
+    },
+    "properties": {
+      "vendor": {
+        "type": "string",
+        "description": "",
+        "defaultValue": "AMD",
+        "required": true,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "arch",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "",
+    "properties": {}
+  },
+  {
+    "name": "Conroe",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "CPU model name used in ComputeCapabilitiesFilter matching extra_spec (k,v) = ('capabilities : cpu_info : model', 'core2duo')",
+    "derived_from": {
+      "name": "model",
+      "namespace": "OS::COMPUTE::CPU"
+    },
+    "properties": {
+      "model": {
+        "type": "string",
+        "description": "",
+        "defaultValue": "Conroe",
+        "required": true,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "Core2duo",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "CPU model name used in ComputeCapabilitiesFilter matching extra_spec (k,v) = ('capabilities : cpu_info : model', 'core2duo')",
+    "derived_from": {
+      "name": "model",
+      "namespace": "OS::COMPUTE::CPU"
+    },
+    "properties": {
+      "model": {
+        "type": "string",
+        "description": "",
+        "defaultValue": "Core2duo",
+        "required": true,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "cores",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "Number of cores used in ComputeCapabilitiesFilter matching extra_spec (k,v) = ('capabilities : cpu_info : topology : cores', '1')",
+    "derived_from": {
+      "name": "topology",
+      "namespace": "OS::COMPUTE::CPU"
+    },
+    "properties": {
+      "cores": {
+        "type": "integer",
+        "description": "",
+        "defaultValue": 1,
+        "required": true,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "features",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "",
+    "properties": {}
+  },
+  {
+    "name": "i686",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "CPU arch code used in ComputeCapabilitiesFilter matching extra_spec (k,v) = ('capabilities : cpu_info : arch', 'x86_64')",
+    "derived_from": {
+      "name": "arch",
+      "namespace": "OS::COMPUTE::CPU"
+    },
+    "properties": {
+      "arch": {
+        "type": "string",
+        "description": "",
+        "defaultValue": "i686",
+        "required": true,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "Intel",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "CPU vendor name used in ComputeCapabilitiesFilter matching extra_spec (k,v) = ('capabilities : cpu_info : vendor', 'Intel')",
+    "derived_from": {
+      "name": "vendor",
+      "namespace": "OS::COMPUTE::CPU"
+    },
+    "properties": {
+      "vendor": {
+        "type": "string",
+        "description": "",
+        "defaultValue": "Intel",
+        "required": true,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "mmx",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "CPU feature flag used in ComputeCapabilitiesFilter matching extra_spec (k,v) = ('capabilities : cpu_info : features', '<in> 'lahf_lm'')",
+    "derived_from": {
+      "name": "features",
+      "namespace": "OS::COMPUTE::CPU"
+    },
+    "properties": {
+      "features": {
+        "type": "string",
+        "description": "",
+        "defaultValue": "mmx",
+        "required": true,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "model",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "",
+    "properties": {}
+  },
+  {
+    "name": "rdtscp",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "CPU feature flag used in ComputeCapabilitiesFilter matching extra_spec (k,v) = ('capabilities : cpu_info : features', '<in> 'lahf_lm'')",
+    "derived_from": {
+      "name": "features",
+      "namespace": "OS::COMPUTE::CPU"
+    },
+    "properties": {
+      "features": {
+        "type": "string",
+        "description": "",
+        "defaultValue": "rdtscp",
+        "required": true,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "sockets",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "Number of cores used in ComputeCapabilitiesFilter matching extra_spec (k,v) = ('capabilities : cpu_info : topology : cores', '1')",
+    "derived_from": {
+      "name": "topology",
+      "namespace": "OS::COMPUTE::CPU"
+    },
+    "properties": {
+      "sockets": {
+        "type": "integer",
+        "description": "",
+        "defaultValue": 1,
+        "required": true,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "threads",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "Number of cores used in ComputeCapabilitiesFilter matching extra_spec (k,v) = ('capabilities : cpu_info : topology : cores', '1')",
+    "derived_from": {
+      "name": "topology",
+      "namespace": "OS::COMPUTE::CPU"
+    },
+    "properties": {
+      "threads": {
+        "type": "integer",
+        "description": "",
+        "defaultValue": 1,
+        "required": true,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "topology",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "Number of cores used in ComputeCapabilitiesFilter matching extra_spec (k,v) = ('capabilities : cpu_info : topology : cores', '1')",
+    "properties": {}
+  },
+  {
+    "name": "vendor",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "",
+    "properties": {}
+  },
+  {
+    "name": "Westmere",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "CPU model name used in ComputeCapabilitiesFilter matching extra_spec (k,v) = ('capabilities : cpu_info : model', 'core2duo')",
+    "derived_from": {
+      "name": "model",
+      "namespace": "OS::COMPUTE::CPU"
+    },
+    "properties": {
+      "model": {
+        "type": "string",
+        "description": "",
+        "defaultValue": "Westmere",
+        "required": true,
+        "confidential": false
+      }
+    }
+  },
+  {
+    "name": "x86_64",
+    "namespace": "OS::COMPUTE::CPU",
+    "description": "CPU arch code used in ComputeCapabilitiesFilter matching extra_spec (k,v) = ('capabilities : cpu_info : arch', 'x86_64')",
+    "derived_from": {
+      "name": "arch",
+      "namespace": "OS::COMPUTE::CPU"
+    },
+    "properties": {
+      "arch": {
+        "type": "string",
+        "description": "",
+        "defaultValue": "x86_64",
+        "required": true,
+        "confidential": false
+      }
+    }
+  }
+] 
+}
