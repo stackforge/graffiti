@@ -23,7 +23,8 @@ class CinderResourceDriver(base.BaseDriver):
 
     def __init__(self):
         self.resource = cinder.CinderResourceDriver()
-        self.resource_types = ["OS::Cinder::Volume"]
+        self.resource_types = ['OS::Cinder::Volume',
+                               'OS::Cinder::VolumeSnapshot']
 
     def get_resource_types(self):
         """Returns the resource types supported by the implementing driver

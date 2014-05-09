@@ -25,6 +25,7 @@ import keystoneclient.v2_0.client as ksclient
 
 from oslo.config import cfg
 
+
 LOG = logging.getLogger(__name__)
 
 
@@ -32,6 +33,8 @@ class CinderResourceDriver(base.ResourceInterface):
 
     def __init__(self):
         super(CinderResourceDriver, self).__init__()
+        self.volume_type = 'OS::Cinder::Volume'
+        self.snapshot_type = 'OS::Cinder::VolumeSnapshot'
         self.separator = "."
         self.service_type = 'volume'
         self.endpoint_type = 'publicURL'
@@ -55,9 +58,17 @@ class CinderResourceDriver(base.ResourceInterface):
         """
 
         cinder_client = self.__get_cinder_client(endpoint_id, auth_token)
-        volume = cinder_client.volumes.get(resource_id)
 
-        cinder_resource = self.transform_to_resource(resource_type, volume)
+        cinder_resource = None
+
+        if resource_type == self.volume_type:
+            cinder_resource = cinder_client.volumes.get(resource_id)
+        elif resource_type == self.snapshot_type:
+            cinder_resource = cinder_client.volume_snapshots.get(resource_id)
+
+        if cinder_resource:
+            cinder_resource = self.transform_to_resource(
+                resource_type, cinder_resource)
 
         return cinder_resource
 
@@ -75,7 +86,7 @@ class CinderResourceDriver(base.ResourceInterface):
 
         cinder_client = self.__get_cinder_client(endpoint_id, auth_token)
 
-        volume_properties = {}
+        cinder_properties = {}
         for capability in resource.capabilities:
             if capability.capability_type_namespace \
                     == resource_type + self.default_namespace_suffix \
@@ -84,7 +95,7 @@ class CinderResourceDriver(base.ResourceInterface):
                 # For unknown properties, just directly set property name.
                 for property_name, property_value in \
                         capability.properties.iteritems():
-                    volume_properties[property_name] = property_value
+                    cinder_properties[property_name] = property_value
             else:
                 properties = capability.properties
                 capability_type = self.replace_colon_from_name(
@@ -100,12 +111,19 @@ class CinderResourceDriver(base.ResourceInterface):
                         capability_type + \
                         self.separator + \
                         self.replace_colon_from_name(property_name)
-                    volume_properties[prop_name] = property_value
+                    cinder_properties[prop_name] = property_value
 
-        volume = cinder_client.volumes.get(resource_id)
-        properties_to_remove = self.get_volume_merged_properties(volume).keys()
+        cinder_resource = None
+
+        if resource_type == self.volume_type:
+            cinder_resource = cinder_client.volumes.get(resource_id)
+        elif resource_type == self.snapshot_type:
+            cinder_resource = cinder_client.volume_snapshots.get(resource_id)
+
+        properties_to_remove = \
+            self._get_merged_properties(cinder_resource).keys()
         #TODO(Travis) metadata_to_delete = []
-        for property_to_keep in volume_properties:
+        for property_to_keep in cinder_properties:
             try:
                 properties_to_remove.remove(property_to_keep)
             except ValueError:
@@ -113,7 +131,7 @@ class CinderResourceDriver(base.ResourceInterface):
                 pass
 
         try:
-            volume.set_metadata(volume, volume_properties)
+            cinder_resource.set_metadata(cinder_resource, cinder_properties)
             #TODO(Travis) cinder_client.volumes.
             # delete_metadata(volume, properties_to_remove)
         except AttributeError:
@@ -130,19 +148,27 @@ class CinderResourceDriver(base.ResourceInterface):
         :param **kwargs: Include additional info required by the driver,
         :returns list of resources
         """
-        resource_list = dict()
+        result = dict()
         #TODO(Travis): Filter based on resource type for snapshot etc
         if resource_query:
             cinder_client = self.__get_cinder_client(endpoint_id, auth_token)
             for resource_type in resource_query.resource_types:
-                volumes = cinder_client.volumes.list()
-                for volume in list(volumes):
-                    resource = self.transform_to_resource(
-                        resource_type,
-                        volume
-                    )
-                resource_list[resource.id] = resource
-        return resource_list
+                cinder_resource_list = []
+                if resource_type == self.volume_type:
+                    cinder_resource_list = cinder_client.volumes.list()
+                elif resource_type == self.snapshot_type:
+                    cinder_resource_list = \
+                        cinder_client.volume_snapshots.list()
+                for cinder_resource in cinder_resource_list:
+                    if cinder_resource.status and \
+                            cinder_resource.status == 'available':
+                        resource = self.transform_to_resource(
+                            resource_type,
+                            cinder_resource)
+                        if resource:
+                            result[resource.id] = resource
+
+        return result
 
     def create_resource(self, resource_type, resource, auth_token,
                         endpoint_id=None, **kwargs):
@@ -191,7 +217,7 @@ class CinderResourceDriver(base.ResourceInterface):
             )
 
         cinder_client = client.Client(
-            '2',
+            '1',
             cfg.CONF.keystone.username,
             cfg.CONF.keystone.password,
             cfg.CONF.keystone.tenant_name,
@@ -199,7 +225,7 @@ class CinderResourceDriver(base.ResourceInterface):
         )
         return cinder_client
 
-    def get_volume_merged_properties(self, volume):
+    def _get_merged_properties(self, volume):
         cinder_volume_properties = {}
         volume_metadata = {}
         volume_image_metadata = {}
@@ -217,7 +243,7 @@ class CinderResourceDriver(base.ResourceInterface):
 
     def transform_to_resource(self, resource_type, volume):
 
-        cinder_volume_properties = self.get_volume_merged_properties(volume)
+        cinder_volume_properties = self._get_merged_properties(volume)
 
         result = Resource()
         result_capabilities = []
@@ -225,7 +251,12 @@ class CinderResourceDriver(base.ResourceInterface):
 
         result.id = volume.id
         result.type = resource_type
-        result.name = volume.name
+        #v1 / v2 clients have landmines
+        result.name = None
+        try:
+            result.name = volume.name
+        except AttributeError:
+            result.name = volume.display_name
 
         for key in cinder_volume_properties:
             if key in self.unmodifiable_properties:
