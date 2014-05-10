@@ -35,6 +35,8 @@ class GlanceResourceDriver(base.ResourceInterface):
         self.endpoint_type = 'publicURL'
         self.default_namespace_postfix = "::Default"
         self.unknown_properties_type = "AdditionalProperties"
+        self.unmodifiable_properties = [u'instance_uuid', u'image_type',
+                                        u'base_image_ref', u'image_location']
 
     def get_resource(self, resource_type, resource_id, auth_token,
                      endpoint_id=None, **kwargs):
@@ -108,7 +110,18 @@ class GlanceResourceDriver(base.ResourceInterface):
                     tag_name = capability.capability_type
                     image_properties[tag_name] = utils.TAG_IDENTIFIER
 
+        #Retrieve unmodifiable properties from glance
         image = glance_client.images.get(resource.id)
+        glance_image_properties = image.properties
+        merge_properties = dict()
+        for key in glance_image_properties:
+            if key in self.unmodifiable_properties:
+                merge_properties[key] = glance_image_properties[key]
+
+        #Set unmodifiable properties in the glance input since purge_props=True
+        image_properties = dict(image_properties.items() +
+                                merge_properties.items())
+
         image.update(properties=image_properties, purge_props=True)
 
     def find_resources(self, resource_query, auth_token,
@@ -207,46 +220,49 @@ class GlanceResourceDriver(base.ResourceInterface):
         image_resource.name = image.name
 
         for key in glance_image_properties:
-            if key.count(self.separator) == 2:
-                (namespace, capability_type, prop_name) = key.split(".")
-                namespace = self.replace_hash_from_name(namespace)
-                capability_type = self.replace_hash_from_name(capability_type)
-                prop_name = self.replace_hash_from_name(prop_name)
-            else:
-                prop_name = key
-                capability_type = None
-                namespace = None
-
-                cap_and_namespace = utils.get_qualifier(
-                    key,
-                    glance_image_properties[key]
-                )
-                if cap_and_namespace:
-                    capability_type = cap_and_namespace.name
-                    namespace = cap_and_namespace.namespace
+            if key not in self.unmodifiable_properties:
+                if key.count(self.separator) == 2:
+                    (namespace, capability_type, prop_name) = key.split(".")
+                    namespace = self.replace_hash_from_name(namespace)
+                    capability_type = \
+                        self.replace_hash_from_name(capability_type)
+                    prop_name = self.replace_hash_from_name(prop_name)
                 else:
-                    namespace = resource_type + self.default_namespace_postfix
-                    capability_type = self.unknown_properties_type
+                    prop_name = key
+                    capability_type = None
+                    namespace = None
 
-            image_property = Property()
-            image_property.name = prop_name
-            image_property.value = glance_image_properties[key]
+                    cap_and_namespace = utils.get_qualifier(
+                        key,
+                        glance_image_properties[key]
+                    )
+                    if cap_and_namespace:
+                        capability_type = cap_and_namespace.name
+                        namespace = cap_and_namespace.namespace
+                    else:
+                        namespace = resource_type + \
+                            self.default_namespace_postfix
+                        capability_type = self.unknown_properties_type
 
-            image_capability = None
-            for capability in image_resource.capabilities:
-                if capability.capability_type_namespace == namespace and \
-                        capability.capability_type == capability_type:
-                    image_capability = capability
+                image_property = Property()
+                image_property.name = prop_name
+                image_property.value = glance_image_properties[key]
 
-            if not image_capability:
-                image_capability = Capability()
-                image_capability.properties = {}
-                image_resource.capabilities.append(image_capability)
+                image_capability = None
+                for capability in image_resource.capabilities:
+                    if capability.capability_type_namespace == namespace and \
+                            capability.capability_type == capability_type:
+                        image_capability = capability
 
-            image_capability.capability_type_namespace = namespace
-            image_capability.capability_type = capability_type
-            image_capability.properties[image_property.name] = \
-                image_property.value
+                if not image_capability:
+                    image_capability = Capability()
+                    image_capability.properties = {}
+                    image_resource.capabilities.append(image_capability)
+
+                image_capability.capability_type_namespace = namespace
+                image_capability.capability_type = capability_type
+                image_capability.properties[image_property.name] = \
+                    image_property.value
 
         return image_resource
 
