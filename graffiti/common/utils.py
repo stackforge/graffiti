@@ -20,6 +20,7 @@ import glob
 import json
 import os
 
+from graffiti.api.model.v1.capability import Capability
 from graffiti.api.model.v1.derived_type import DerivedType
 
 
@@ -139,3 +140,36 @@ def get_qualifier(property_name, property_value):
                 return property_dict[key2]
 
     return None
+
+
+def resolve_capability(key, value, target_resource,
+                       default_namespace=None,
+                       default_name=None):
+    resolved_type = None
+    resolved_namespace = None
+
+    cap_and_namespace = get_qualifier(
+        key,
+        value
+    )
+    if cap_and_namespace:
+        resolved_type = cap_and_namespace.name
+        resolved_namespace = cap_and_namespace.namespace
+    else:
+        resolved_namespace = default_namespace
+        resolved_type = default_name
+
+    resolved_capability = None
+    for capability in target_resource.capabilities:
+        if capability.capability_type_namespace == resolved_namespace \
+                and capability.capability_type == resolved_type:
+            resolved_capability = capability
+
+    if not resolved_capability:
+        resolved_capability = Capability()
+        resolved_capability.capability_type_namespace = resolved_namespace
+        resolved_capability.capability_type = resolved_type
+        resolved_capability.properties = {}
+        target_resource.capabilities.append(resolved_capability)
+
+    resolved_capability.properties[key] = value

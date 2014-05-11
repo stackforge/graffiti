@@ -16,6 +16,7 @@
 from graffiti.api.model.v1.capability import Capability
 from graffiti.api.model.v1.resource import Resource
 from graffiti.common import exception
+from graffiti.common import utils
 from graffiti.drivers import base
 
 from novaclient.v1_1 import client
@@ -33,7 +34,6 @@ class NovaResourceDriver(base.ResourceInterface):
         self.endpoint_type = 'publicURL'
         self.default_namespace = "OS::COMPUTE::CPU"
         self.default_resource_type = "OS::Nova::Flavor"
-        self.default_extraspec_key = "capabilities:cpu_info"
 
     def get_resource(self, resource_type, resource_id, auth_token,
                      endpoint_id=None, **kwargs):
@@ -202,47 +202,65 @@ class NovaResourceDriver(base.ResourceInterface):
             property_name = None
             property_value = None
 
-            if key in extraspecs_key_map:
-                capability_type, property_name, property_value = \
-                    extraspecs_key_map[key](key, extra_spec_keys[key])
+            if not key.startswith("capabilities:cpu_info"):
+                utils.resolve_capability(
+                    key, extra_spec_keys[key], flavor_resource)
             else:
-                capability_type, property_name, property_value = \
-                    extractSimpleValue(key, extra_spec_keys[key])
+                #TODO(Facundo)This can be automatic using dictionary
+                if key in extraspecs_key_map:
+                    capability_type, property_name, property_value = \
+                        extraspecs_key_map[key](key, extra_spec_keys[key])
+                else:
+                    capability_type, property_name, property_value = \
+                        extractSimpleValue(key, extra_spec_keys[key])
 
-            capability_property = {property_name: property_value}
+                capability = Capability()
+                capability.capability_type_namespace = capability_namespace
+                capability.capability_type = capability_type
+                capability.properties = {property_name: property_value}
 
-            flavor_capability = Capability()
-            flavor_capability.properties = {}
+                flavor_resource.capabilities.append(capability)
 
-            flavor_capability.capability_type_namespace = capability_namespace
-            flavor_capability.capability_type = capability_type
-            flavor_capability.properties.update(capability_property)
-
-            flavor_resource.capabilities.append(flavor_capability)
         return flavor_resource
 
     def transform_resource_to_extraspecs(self, resource):
+
+        topology_properties = {
+            "cores": "topology:cores",
+            "threads": "topology:threads",
+            "sockets": "topology:sockets",
+        }
+
         extraspec = {}
+
         for capability in resource.capabilities:
-            topology_properties = {
-                "cores": "topology:cores",
-                "threads": "topology:threads",
-                "sockets": "topoloy:sockets",
-            }
 
             base_key = ""
             if capability.capability_type_namespace == self.default_namespace:
                 base_key = "capabilities:cpu_info"
 
-            for property_name, property_value in capability.properties.items():
-                if property_name == "features":
+                for property_name, property_value \
+                        in capability.properties.items():
+                    if property_name == "features":
+                        key = base_key + ':' + property_name
+                        extraspec[key] = '<in> ' + property_value
+                        continue
+                    if property_name in topology_properties:
+                        key = base_key + ':' \
+                            + topology_properties[property_name]
+                        extraspec[key] = property_value
+                        continue
                     key = base_key + ':' + property_name
-                    extraspec[key] = '<in> ' + property_value
-                    continue
-                if property_name in topology_properties:
-                    key = base_key + ':' + topology_properties[property_name]
                     extraspec[key] = property_value
-                    continue
-                key = base_key + ':' + property_name
-                extraspec[key] = property_value
+            else:
+                if not capability.properties:
+                    #if capability doesnt have properties add as TAG
+                    key = capability.capability_type
+                    extraspec[key] = utils.TAG_IDENTIFIER
+                else:
+                    for property_name, property_value \
+                            in capability.properties.items():
+                        key = property_name
+                        extraspec[key] = str(property_value)
+
         return extraspec
