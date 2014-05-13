@@ -141,7 +141,7 @@ cfg.CONF.register_opts(file_opts,
 # This is because the following code connects from here to your pycharms
 # (or your pydev)
 pydevd = {
-    'enabled': True,
+    'enabled': False,
     'port': 22075,
     'bindhost': 'localhost'
 }
@@ -151,4 +151,6 @@ pydevd = {
 df = driver_factory.DriverFactory()
 
 # Load Out of the box Dictionary
-utils.load_dictionary()
+#specify url kwarg to load from URL.  Or load from file system
+utils.load_dictionary(url='http://localhost:21071/1/capability_type/all/')
+#utils.load_dictionary()

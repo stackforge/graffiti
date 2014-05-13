@@ -33,7 +33,8 @@ class NovaResourceDriver(base.ResourceInterface):
 
         self.endpoint_type = 'publicURL'
         self.default_namespace = "OS::COMPUTE::CPU"
-        self.default_resource_type = "OS::Nova::Flavor"
+        self.flavor_resource_type = "OS::Nova::Flavor"
+        self.aggregate_resource_type = "OS::Nova::Aggregate"
 
     def get_resource(self, resource_type, resource_id, auth_token,
                      endpoint_id=None, **kwargs):
@@ -48,13 +49,18 @@ class NovaResourceDriver(base.ResourceInterface):
 
         nova_client = self.__get_nova_client(auth_token)
 
-        flavor = nova_client.flavors.get(resource_id)
-
-        flavor_resource = self.transform_flavor_to_resource(
-            resource_type,
-            flavor)
-
-        return flavor_resource
+        nova_resource = None
+        if resource_type == self.flavor_resource_type:
+            nova_resource = nova_client.flavors.get(resource_id)
+            if nova_resource:
+                return self.transform_flavor_to_resource(
+                    resource_type, nova_resource)
+        elif resource_type == self.aggregate_resource_type:
+            nova_resource = nova_client.aggregates.get(resource_id)
+            if nova_resource:
+                return self.transform_aggregate_to_resource(
+                    resource_type, nova_resource)
+        return nova_resource
 
     def update_resource(self, resource_type, resource_id, resource, auth_token,
                         endpoint_id=None, **kwargs):
@@ -69,9 +75,17 @@ class NovaResourceDriver(base.ResourceInterface):
         """
 
         nova_client = self.__get_nova_client(auth_token)
-        flavor = nova_client.flavors.get(resource_id)
-        extraspecs = self.transform_resource_to_extraspecs(resource)
-        flavor.set_keys(extraspecs)
+
+        if resource_type == self.flavor_resource_type:
+            nova_resource = nova_client.flavors.get(resource_id)
+            if nova_resource:
+                extraspecs = self.transform_resource_to_extraspecs(resource)
+                nova_resource.set_keys(extraspecs)
+        elif resource_type == self.aggregate_resource_type:
+            nova_resource = nova_client.aggregates.get(resource_id)
+            if nova_resource:
+                metadata = self.transform_resource_to_aggregate(resource)
+                nova_resource.set_metadata(metadata)
 
     def find_resources(self, resource_query, auth_token,
                        endpoint_id=None, **kwargs):
@@ -88,7 +102,7 @@ class NovaResourceDriver(base.ResourceInterface):
             flavors = list(nova_client.flavors.list())
             for flavor in flavors:
                 flavor_resource = self.transform_flavor_to_resource(
-                    self.default_resource_type,
+                    self.flavor_resource_type,
                     flavor
                 )
                 resource_list[flavor_resource.id] = flavor_resource
@@ -131,6 +145,42 @@ class NovaResourceDriver(base.ResourceInterface):
             service_type="compute")
 
         return nova_client
+
+    def transform_aggregate_to_resource(self, resource_type, aggregate):
+        aggregate_resource = Resource()
+        aggregate_resource.id = str(aggregate.id)
+        aggregate_resource.name = aggregate.name
+        aggregate_resource.type = resource_type
+
+        aggregate_resource.capabilities = []
+        aggregate_resource.properties = {}
+
+        aggregate_resource.properties.update(
+            {
+                "availability_zone": aggregate.availability_zone
+            }
+        )
+
+        for key, value in aggregate.metadata.items():
+            utils.resolve_capability(key, value, aggregate_resource)
+        return aggregate_resource
+
+    def transform_resource_to_aggregate(self, resource):
+        properties = {}
+        for capability in resource.capabilities:
+            print capability.properties
+            if not capability.properties:
+                #if capability doesnt have properties add as TAG
+                key = capability.capability_type
+                properties[key] = utils.TAG_IDENTIFIER
+            else:
+                for property_name, property_value \
+                        in capability.properties.items():
+                    key = property_name
+                    if property_value:
+                        properties[key] = str(property_value)
+
+        return properties
 
     def transform_flavor_to_resource(self, resource_type, flavor):
         flavor_resource = Resource()
@@ -243,15 +293,15 @@ class NovaResourceDriver(base.ResourceInterface):
                         in capability.properties.items():
                     if property_name == "features":
                         key = base_key + ':' + property_name
-                        extraspec[key] = '<in> ' + property_value
+                        extraspec[key] = '<in> ' + str(property_value)
                         continue
                     if property_name in topology_properties:
                         key = base_key + ':' \
                             + topology_properties[property_name]
-                        extraspec[key] = property_value
+                        extraspec[key] = str(property_value)
                         continue
                     key = base_key + ':' + property_name
-                    extraspec[key] = property_value
+                    extraspec[key] = str(property_value)
             else:
                 if not capability.properties:
                     #if capability doesnt have properties add as TAG

@@ -5,11 +5,6 @@
     "property_format" : "P"
   },
   {
-    "namespace": "TRUST",
-    "resource_types": [ "OS::GLANCE::IMAGE", "OS::GLANCE::SNAPSHOT", "OS::CINDER::VOLUME", "OS::CINDER::VOLUMESNAPSHOT" ],
-    "property_format" : "P"
-  },
-  {
     "namespace": "OS::CINDER",
     "resource_types": [ "OS::GLANCE::IMAGE", "OS::GLANCE::SNAPSHOT", "OS::CINDER::VOLUME", "OS::CINDER::VOLUMESNAPSHOT" ],
     "property_format" : "P"
@@ -37,6 +32,11 @@
   {
     "namespace": "OS::COMPUTE",
     "resource_types": [ "OS::GLANCE::IMAGE", "OS::GLANCE::SNAPSHOT", "OS::CINDER::VOLUME", "OS::CINDER::VOLUMESNAPSHOT" ],
+    "property_format" : "P"
+  },
+  {
+    "namespace": "SERVICE::ASSURANCE",
+    "resource_types": [ "OS::NOVA::FLAVOR", "OS::NOVA::HOSTAGGREGATE" ],
     "property_format" : "P"
   }
 ]

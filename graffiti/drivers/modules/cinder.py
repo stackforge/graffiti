@@ -14,10 +14,9 @@
 # limitations under the License.
 
 from cinderclient import client
-from graffiti.api.model.v1.capability import Capability
-from graffiti.api.model.v1.property import Property
 from graffiti.api.model.v1.resource import Resource
 from graffiti.common import exception
+from graffiti.common import utils
 from graffiti.drivers import base
 from graffiti.openstack.common import log as logging
 
@@ -88,30 +87,16 @@ class CinderResourceDriver(base.ResourceInterface):
 
         cinder_properties = {}
         for capability in resource.capabilities:
-            if capability.capability_type_namespace \
-                    == resource_type + self.default_namespace_suffix \
-                    and capability.capability_type \
-                    == self.unknown_properties_type:
-                # For unknown properties, just directly set property name.
-                for property_name, property_value in \
-                        capability.properties.iteritems():
-                    cinder_properties[property_name] = property_value
+            if not capability.properties:
+                #if capability doesnt have properties add as TAG
+                key = capability.capability_type
+                cinder_properties[key] = utils.TAG_IDENTIFIER
             else:
-                properties = capability.properties
-                capability_type = self.replace_colon_from_name(
-                    capability.capability_type
-                )
-                capability_type_namespace = self.replace_colon_from_name(
-                    capability.capability_type_namespace
-                )
-
-                for property_name, property_value in properties.iteritems():
-                    prop_name = capability_type_namespace + \
-                        self.separator + \
-                        capability_type + \
-                        self.separator + \
-                        self.replace_colon_from_name(property_name)
-                    cinder_properties[prop_name] = property_value
+                for property_name, property_value \
+                        in capability.properties.items():
+                    key = property_name
+                    if property_value:
+                        cinder_properties[key] = str(property_value)
 
         cinder_resource = None
 
@@ -261,36 +246,8 @@ class CinderResourceDriver(base.ResourceInterface):
         for key in cinder_volume_properties:
             if key in self.unmodifiable_properties:
                 continue
-
-            if key.count(self.separator) == 2:
-                (namespace, capability_type, prop_name) = key.split(".")
-                namespace = self.replace_hash_from_name(namespace)
-                capability_type = self.replace_hash_from_name(capability_type)
-                prop_name = self.replace_hash_from_name(prop_name)
-            else:
-                namespace = resource_type + self.default_namespace_suffix
-                capability_type = self.unknown_properties_type
-                prop_name = key
-
-            result_property = Property()
-            result_property.name = prop_name
-            result_property.value = cinder_volume_properties[key]
-
-            result_capability = None
-            for capability in result.capabilities:
-                if capability.capability_type_namespace == namespace and \
-                        capability.capability_type == capability_type:
-                    result_capability = capability
-
-            if not result_capability:
-                result_capability = Capability()
-                result_capability.properties = {}
-                result.capabilities.append(result_capability)
-
-            result_capability.capability_type_namespace = namespace
-            result_capability.capability_type = capability_type
-            result_capability.properties[result_property.name] = \
-                result_property.value
+            utils.resolve_capability(
+                key, cinder_volume_properties[key], result)
 
         return result
 

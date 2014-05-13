@@ -23,7 +23,7 @@ class NovaResourceDriver(base.BaseDriver):
 
     def __init__(self):
         self.resource = nova.NovaResourceDriver()
-        self.resource_types = ["OS::Nova::Flavor"]
+        self.resource_types = ["OS::Nova::Flavor", "OS::Nova::Aggregate"]
 
     def get_resource_types(self):
         """Returns the resource types supported by the implementing driver

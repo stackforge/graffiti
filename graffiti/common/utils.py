@@ -17,6 +17,7 @@
 # to implement this method
 
 import glob
+import httplib2
 import json
 import os
 
@@ -30,6 +31,7 @@ CAPABILITY_TYPE_STRING = "CapabilityType*"
 
 __namespace_resource_type_dict = dict()
 __namespace_property_format_dict = dict()
+__namespace_list = []
 
 __namespace_dict = dict()
 __property_dict = dict()
@@ -42,7 +44,7 @@ def _(msg):
     return msg
 
 
-def load_dictionary():
+def load_dictionary(**kwargs):
     cur_dir = os.getcwd()
     os.chdir(DICTIONARY_DATA_FOLDER)
 
@@ -50,9 +52,16 @@ def load_dictionary():
         print "Loading Namespace file: %s" % namespace_file
         load_namespace(namespace_file)
 
-    for cap_type_file in glob.glob(CAPABILITY_TYPE_STRING):
-        print "Loading Capability type file: %s" % cap_type_file
-        load_capability_type(cap_type_file)
+    if kwargs.get('url'):
+        for namespace in __namespace_list:
+            print "Loading Capability types for namespace: %s" % \
+                  namespace['namespace']
+            load_capability_type_http(kwargs.get('url'),
+                                      namespace['namespace'])
+    else:
+        for cap_type_file in glob.glob(CAPABILITY_TYPE_STRING):
+            print "Loading Capability type file: %s" % cap_type_file
+            load_capability_type(cap_type_file)
 
     os.chdir(cur_dir)
 
@@ -67,48 +76,66 @@ def load_namespace(namespacefile):
                 namespace['resource_types']
             __namespace_property_format_dict[namespace['namespace']] = \
                 namespace['property_format']
+            __namespace_list.append(namespace)
 
 
 def load_capability_type(cap_type_file):
     with open(cap_type_file) as json_file:
         json_data = json.load(json_file)
-        for cap_type in json_data['capability_type_list']:
-            derived_type = DerivedType()
-            derived_type.name = cap_type['name']
-            derived_type.namespace = cap_type['namespace']
+        capability_type_list = json_data['capability_type_list']
+        load_capability_type_list(capability_type_list)
 
-            key_names = []
-            for key in cap_type['properties'].keys():
-                property_name = key
-                if cap_type['properties'][key]['type'] == "choice":
-                    #Property name and item in each choice as key
-                    for item in cap_type['properties'][key]['items']:
-                        dict_key = property_name + item
-                        key_names.append(dict_key)
+
+def load_capability_type_http(url, namespace, **kwargs):
+    token = ""
+    with open("../temp-token.txt") as tokenfile:
+        token = tokenfile.readline()
+    kwargs.setdefault('headers', {})['X-Auth-Token'] = token
+    http_client = httplib2.Http()
+    resp, body = http_client.request(url + namespace,
+                                     'GET', **kwargs)
+    json_data = json.loads(body)
+    load_capability_type_list(json_data)
+
+
+def load_capability_type_list(capability_type_list):
+    for cap_type in capability_type_list:
+        derived_type = DerivedType()
+        derived_type.name = cap_type['name']
+        derived_type.namespace = cap_type['namespace']
+
+        key_names = []
+        for key in cap_type['properties'].keys():
+            property_name = key
+            if cap_type['properties'][key]['type'] == "choice":
+                #Property name and item in each choice as key
+                for item in cap_type['properties'][key]['items']:
+                    dict_key = property_name + item
+                    key_names.append(dict_key)
+            else:
+                if 'defaultValue' in cap_type['properties'][key].keys():
+                    #Property name and default value as key
+                    dict_key = property_name + \
+                        str(cap_type['properties'][key]
+                            ['defaultValue'])
+                    key_names.append(dict_key)
                 else:
-                    if 'defaultValue' in cap_type['properties'][key].keys():
-                        #Property name and default value as key
-                        dict_key = property_name + \
-                            str(cap_type['properties'][key]
-                                ['defaultValue'])
-                        key_names.append(dict_key)
-                    else:
-                        #Just use the property name as key
-                        dict_key = property_name
-                        key_names.append(dict_key)
+                    #Just use the property name as key
+                    dict_key = property_name
+                    key_names.append(dict_key)
 
-            property_dict = dict()
-            if derived_type.namespace in __namespace_dict.keys():
-                property_dict = __namespace_dict[derived_type.namespace]
+        property_dict = dict()
+        if derived_type.namespace in __namespace_dict.keys():
+            property_dict = __namespace_dict[derived_type.namespace]
 
-            for key in key_names:
-                property_dict[key.lower()] = derived_type
+        for key in key_names:
+            property_dict[key.lower()] = derived_type
 
-            #Add capability itself as property - behaves as a TAG
-            tag_name = cap_type['name'] + TAG_IDENTIFIER
-            property_dict[tag_name.lower()] = derived_type
+        #Add capability itself as property - behaves as a TAG
+        tag_name = cap_type['name'] + TAG_IDENTIFIER
+        property_dict[tag_name.lower()] = derived_type
 
-            __namespace_dict[derived_type.namespace] = property_dict
+        __namespace_dict[derived_type.namespace] = property_dict
 
 
 def get_namespace_resource_type_dict():
@@ -156,8 +183,8 @@ def resolve_capability(key, value, target_resource,
         resolved_type = cap_and_namespace.name
         resolved_namespace = cap_and_namespace.namespace
     else:
-        resolved_namespace = default_namespace
-        resolved_type = default_name
+        resolved_namespace = target_resource.type + "::Default"
+        resolved_type = "AdditionalProperties"
 
     resolved_capability = None
     for capability in target_resource.capabilities:

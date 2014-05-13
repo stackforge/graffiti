@@ -6,6 +6,7 @@ oslo.config>=1.2.0
 python-glanceclient
 python-novaclient
 python-cinderclient
+httplib2>=0.7.5
 alembic>=0.4.1
 iso8601>=0.1.8
 requests>=1.1
