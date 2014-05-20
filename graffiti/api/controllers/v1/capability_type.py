@@ -18,6 +18,8 @@ from pecan.rest import RestController
 from wsme.api import Response
 from wsmeext.pecan import wsexpose
 
+from graffiti.api.controllers.v1.capability_type_derived import\
+    CapabilityTypeDerivedController
 from graffiti.api.model.v1.capability_type import CapabilityType
 from graffiti.api.model.v1.dao.captype_dao_factory \
     import CapabilityTypeDAOFactory
@@ -29,6 +31,9 @@ import six
 
 
 class CapabilityTypeController(RestController):
+
+    derived_properties = CapabilityTypeDerivedController()
+
     def __init__(self):
         super(RestController, self).__init__()
         self.status = 200

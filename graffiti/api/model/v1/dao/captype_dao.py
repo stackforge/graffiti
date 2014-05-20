@@ -26,6 +26,9 @@ class CapabilityTypeDAOBase(object):
     def get_capability_type(self, name, namespace):
         return None
 
+    def get_capability_type_with_derived_properties(self, name, namespace):
+        return None
+
     def find_capability_types(self, query_string):
         return []
 
