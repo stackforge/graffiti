@@ -18,6 +18,8 @@ from pecan.rest import RestController
 from wsme.api import Response
 from wsmeext.pecan import wsexpose
 
+from graffiti.api.controllers.v1.capability_type_batch import\
+    CapabilityTypeBatchController
 from graffiti.api.controllers.v1.capability_type_derived import\
     CapabilityTypeDerivedController
 from graffiti.api.model.v1.capability_type import CapabilityType
@@ -32,6 +34,7 @@ import six
 
 class CapabilityTypeController(RestController):
 
+    batch = CapabilityTypeBatchController()
     derived_properties = CapabilityTypeDerivedController()
 
     def __init__(self):

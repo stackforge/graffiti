@@ -109,9 +109,7 @@ class DBCapabilityTypeDAO(CapabilityTypeDAOBase):
     def get_capability_type(self, name, namespace):
         db_capability_type = dbapi.capability_type_get(name, namespace)
         if not db_capability_type:
-            res = CapabilityType(CapabilityType(), status_code=404,
-                                 error="CapabilityType Not Found")
-            return res
+            return None
 
         return self._to_model(db_capability_type)
 
