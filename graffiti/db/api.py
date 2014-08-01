@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# WKO: testing branch dependency
+
 # import copy
 from oslo.config import cfg
 
