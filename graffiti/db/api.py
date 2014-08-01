@@ -14,7 +14,7 @@
 # limitations under the License.
 
 # WKO: testing branch dependency
-
+# Lakshmi : testing branch dependency on db
 # import copy
 from oslo.config import cfg
 
